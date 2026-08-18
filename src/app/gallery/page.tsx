@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { artworks, ArtworkCategory } from "@/data/artworks";
 
@@ -15,8 +16,31 @@ const CATEGORIES: ("ALL" | ArtworkCategory)[] = [
   "DECORATIVE"
 ];
 
-export default function GalleryPage() {
+function GalleryContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const queryCategory = searchParams.get("category") as ArtworkCategory | null;
+  
   const [activeCategory, setActiveCategory] = useState<"ALL" | ArtworkCategory>("ALL");
+
+  // Sync state with URL when component mounts or URL changes
+  useEffect(() => {
+    if (queryCategory && CATEGORIES.includes(queryCategory)) {
+      setActiveCategory(queryCategory);
+    } else {
+      setActiveCategory("ALL");
+    }
+  }, [queryCategory]);
+
+  const handleCategoryClick = (category: "ALL" | ArtworkCategory) => {
+    setActiveCategory(category);
+    // Optionally update URL so it can be shared
+    if (category === "ALL") {
+      router.push("/gallery", { scroll: false });
+    } else {
+      router.push(`/gallery?category=${encodeURIComponent(category)}`, { scroll: false });
+    }
+  };
 
   const filteredArtworks = artworks.filter(
     (artwork) => activeCategory === "ALL" || artwork.category === activeCategory
@@ -41,7 +65,7 @@ export default function GalleryPage() {
           {CATEGORIES.map((category) => (
             <button
               key={category}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => handleCategoryClick(category)}
               className={`text-[10px] md:text-xs tracking-[0.2em] uppercase transition-all duration-300 pb-2 ${
                 activeCategory === category
                   ? "text-ink-900 border-b border-ink-900 font-medium"
@@ -71,21 +95,19 @@ export default function GalleryPage() {
                 transition={{ duration: 0.5 }}
                 className="break-inside-avoid mb-8 relative group"
               >
-                <Link href={`/gallery/${artwork.id}`} className="block group">
-                  <div className="relative overflow-hidden bg-earth-100 shadow-sm mb-4">
-                    <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
-                    <Image 
-                      src={artwork.image}
-                      alt={artwork.title}
-                      width={800}
-                      height={artwork.orientation === 'portrait' ? 1000 : 800}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
-                    />
-                  </div>
-                  <div className="text-center md:text-left px-2">
-                    <h3 className="font-serif text-lg text-ink-900 group-hover:text-ink-800 transition-colors">{artwork.title}</h3>
-                    <p className="tracking-[0.2em] uppercase text-[10px] text-ink-800/50 mt-1">{artwork.category}</p>
+                <Link href={`/gallery/${artwork.id}`} className="relative block group w-full aspect-[4/5] shadow-xl rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(86,65,107,0.3)] transition-all duration-500">
+                  <Image 
+                    src={artwork.image}
+                    alt={artwork.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/20 to-transparent opacity-90" />
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 flex flex-col items-center text-center z-20">
+                    <h3 className="font-serif text-xl md:text-2xl text-white mb-2">{artwork.title}</h3>
+                    <p className="tracking-[0.2em] uppercase text-[10px] text-accent-gold font-medium">{artwork.category}</p>
                   </div>
                 </Link>
               </motion.div>
@@ -100,5 +122,17 @@ export default function GalleryPage() {
         )}
       </section>
     </div>
+  );
+}
+
+export default function GalleryPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-ivory flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-ink-900 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <GalleryContent />
+    </Suspense>
   );
 }

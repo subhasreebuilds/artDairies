@@ -45,25 +45,26 @@ export default function Home() {
           {/* RIGHT: Featured Artwork */}
           <div className="lg:col-span-7 relative order-1 lg:order-2 flex justify-end">
             {featuredWorks[0] && (
-              <div className="relative w-full max-w-2xl group flex flex-col md:flex-row items-end gap-6">
-                <div className="relative w-full bg-white shadow-xl rounded-2xl overflow-hidden flex items-center justify-center p-8 md:p-12 border border-ink-900/5 transition-transform duration-700 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+              <Link href={`/gallery/${featuredWorks[0].id}`} className="relative w-full max-w-lg group flex flex-col items-center">
+                <div className="relative w-full aspect-[4/5] shadow-2xl rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(86,65,107,0.3)]">
                   <Image 
                     src={featuredWorks[0].image} 
                     alt={featuredWorks[0].title} 
-                    width={1000}
-                    height={featuredWorks[0].orientation === 'portrait' ? 1200 : 1000}
-                    className="w-full h-auto object-contain drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-[1.5s]"
+                    fill
+                    className="object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                     priority
                   />
+                  {/* Gradient overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/20 to-transparent opacity-90" />
+                  
+                  {/* Text content completely inside the card, bezel-less */}
+                  <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col items-center text-center">
+                    <span className="text-white/60 text-[10px] tracking-[0.3em] uppercase mb-4 font-light">01 / Featured Work</span>
+                    <h3 className="font-serif text-3xl text-white mb-2">{featuredWorks[0].title}</h3>
+                    <p className="tracking-[0.2em] uppercase text-xs text-accent-gold font-medium">{featuredWorks[0].category}</p>
+                  </div>
                 </div>
-                
-                {/* Subtle Metadata */}
-                <div className="hidden md:flex flex-col text-xs tracking-[0.2em] uppercase text-ink-800/50 whitespace-nowrap" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
-                  <span className="text-accent-gold font-medium">01 / FEATURED WORK</span>
-                  <span className="mt-4 text-ink-900">{featuredWorks[0].category}</span>
-                </div>
-              </div>
+              </Link>
             )}
           </div>
         </div>
@@ -183,21 +184,19 @@ export default function Home() {
                 <Link 
                   href={`/gallery?category=${encodeURIComponent(cat.name)}`} 
                   key={cat.title} 
-                  className="group relative flex flex-col items-center justify-center aspect-[4/5] overflow-hidden bg-white rounded-2xl shadow-md border border-ink-900/5 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                  className="group relative flex flex-col w-full aspect-[4/5] shadow-2xl rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(86,65,107,0.3)]"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-ink-900/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700 z-10" />
                   <Image 
                     src={image}
                     alt={cat.title}
                     fill
-                    className="object-cover transform group-hover:scale-110 group-hover:rotate-1 transition-transform duration-[2s] ease-out"
+                    className="object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/20 to-transparent opacity-90" />
                   
-                  <div className="relative z-20 flex flex-col items-center justify-center p-8 text-white w-full h-full">
-                    <span className="text-accent-gold font-serif text-sm italic mb-auto mt-2 drop-shadow-md">{count} Works</span>
-                    <h3 className="font-serif text-2xl text-center text-white mt-auto mb-2 tracking-wide drop-shadow-lg group-hover:-translate-y-1 transition-transform duration-500">
-                      {cat.title}
-                    </h3>
+                  <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col items-center text-center z-20">
+                    <h3 className="font-serif text-2xl text-white mb-2">{cat.title}</h3>
+                    <p className="tracking-[0.2em] uppercase text-[10px] text-accent-gold font-medium">{count} WORKS</p>
                   </div>
                 </Link>
               );

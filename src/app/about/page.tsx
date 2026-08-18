@@ -17,7 +17,7 @@ export default function AboutPage() {
                 src="/artworks/author.png" 
                 alt="The Artist" 
                 fill 
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-ink-900/5 mix-blend-multiply pointer-events-none" />
