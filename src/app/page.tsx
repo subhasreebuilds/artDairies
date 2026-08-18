@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { artworks } from "@/data/artworks";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow, Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 export default function Home() {
   const featuredWorks = artworks.filter(a => a.featured).slice(0, 4);
@@ -71,36 +79,66 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-            {featuredWorks.map((artwork, index) => (
-              <Link 
-                href={`/gallery/${artwork.id}`} 
-                key={artwork.id}
-                className="group flex flex-col items-center break-inside-avoid mb-6"
-              >
-                <div className="relative w-full overflow-hidden bg-white shadow-md rounded-2xl border border-ink-900/5 mb-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
-                  <Image 
-                    src={artwork.image}
-                    alt={artwork.title}
-                    width={800}
-                    height={artwork.orientation === 'portrait' ? 1000 : 800}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out p-6 md:p-10"
-                  />
-                </div>
-                <div className="text-center mt-2">
-                  <h3 className="font-serif text-xl text-ink-900 group-hover:text-accent-gold transition-colors mb-1">{artwork.title}</h3>
-                  <p className="tracking-[0.2em] uppercase text-[10px] text-ink-800/60 font-medium">{artwork.category}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-          
-          <div className="mt-12 flex justify-center md:hidden">
-            <Link href="/gallery" className="flex items-center gap-2 text-ink-800 tracking-widest uppercase text-xs">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
+          <div className="relative mt-12 pb-16 -mx-6 md:-mx-12 lg:-mx-24 overflow-hidden group">
+            <Swiper
+              effect={'coverflow'}
+              grabCursor={true}
+              centeredSlides={true}
+              slidesPerView={'auto'}
+              initialSlide={2}
+              loop={true}
+              coverflowEffect={{
+                rotate: 0,
+                stretch: -60, // Negative stretch pulls them together like a deck
+                depth: 150,
+                modifier: 1.5,
+                slideShadows: true, // Needed when they stick together
+              }}
+              autoplay={{
+                delay: 3500,
+                disableOnInteraction: false,
+              }}
+              navigation={{
+                nextEl: '.swiper-button-next-custom',
+                prevEl: '.swiper-button-prev-custom',
+              }}
+              modules={[EffectCoverflow, Navigation, Pagination, Autoplay]}
+              className="w-full !pt-12 !pb-20"
+            >
+              {[...featuredWorks, ...featuredWorks, ...featuredWorks, ...featuredWorks].map((artwork, index) => (
+                <SwiperSlide key={`${artwork.id}-loop-${index}`} className="!w-[280px] md:!w-[350px] lg:!w-[450px]">
+                  <Link 
+                    href={`/gallery/${artwork.id}`} 
+                    className="flex flex-col items-center w-full"
+                  >
+                    <div className="relative w-full aspect-[4/5] shadow-2xl rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(86,65,107,0.3)]">
+                      <Image 
+                        src={artwork.image}
+                        alt={artwork.title}
+                        fill
+                        className="object-cover transform hover:scale-105 transition-transform duration-[1.5s] ease-out"
+                      />
+                      {/* Gradient overlay for text readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/20 to-transparent opacity-90" />
+                      
+                      {/* Text content completely inside the card, bezel-less */}
+                      <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col items-center text-center">
+                        <h3 className="font-serif text-2xl text-white mb-2">{artwork.title}</h3>
+                        <p className="tracking-[0.2em] uppercase text-[10px] text-accent-gold font-medium">{artwork.category}</p>
+                      </div>
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            
+            {/* Custom Navigation (Sleek & Cute) */}
+            <div className="absolute top-1/2 -translate-y-1/2 left-4 md:left-12 lg:left-24 z-20 swiper-button-prev-custom cursor-pointer text-ink-900/30 hover:text-accent-gold transition-colors duration-300 md:opacity-0 md:group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0">
+              <ChevronLeft className="w-10 h-10 md:w-16 md:h-16" strokeWidth={1} />
+            </div>
+            <div className="absolute top-1/2 -translate-y-1/2 right-4 md:right-12 lg:right-24 z-20 swiper-button-next-custom cursor-pointer text-ink-900/30 hover:text-accent-gold transition-colors duration-300 md:opacity-0 md:group-hover:opacity-100 translate-x-4 group-hover:translate-x-0">
+              <ChevronRight className="w-10 h-10 md:w-16 md:h-16" strokeWidth={1} />
+            </div>
           </div>
         </div>
       </section>

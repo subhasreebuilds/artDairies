@@ -62,13 +62,13 @@ export default function ContactPage() {
                     <span className="tracking-wide">@art_.diaries._</span>
                   </a>
                   <a
-                    href="mailto:hello@example.com"
+                    href="mailto:hello.art.diaries@gmail.com"
                     className="flex items-center gap-6 text-ink-800 hover:text-ink-900 transition-colors font-light group"
                   >
                     <span className="bg-earth-100 p-4 rounded-full group-hover:bg-accent-gold/20 transition-colors">
                       <Mail className="w-5 h-5 text-ink-900" />
                     </span>
-                    <span className="tracking-wide">hello@artdiaries.com (Placeholder)</span>
+                    <span className="tracking-wide">hello.art.diaries@gmail.com</span>
                   </a>
                 </div>
               </div>
