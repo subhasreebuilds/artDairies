@@ -37,38 +37,44 @@ export default function ProcessPage() {
   return (
     <div className="min-h-screen bg-ivory text-ink-900 pb-24">
       {/* Header */}
-      <section className="py-24 px-6 text-center max-w-4xl mx-auto">
-        <h1 className="font-serif text-5xl md:text-6xl tracking-widest mb-8">MY PROCESS</h1>
-        <p className="font-light text-lg tracking-wide text-ink-800/80 leading-relaxed">
+      <section className="py-24 px-6 text-center max-w-4xl mx-auto border-b border-ink-900/10 mb-24">
+        <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
+          Behind the Canvas
+        </span>
+        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">My Process</h1>
+        <p className="font-light text-lg tracking-wide text-ink-800/80 leading-[1.8]">
           Art is a meditation. Creating these pieces requires hours of focus, patience, and a deep connection to the present moment. Here is a glimpse into how a blank surface transforms into a finished artwork.
         </p>
       </section>
 
       {/* Timeline */}
-      <section className="max-w-6xl mx-auto px-6">
+      <section className="max-w-[1400px] mx-auto px-6">
         <div className="space-y-32">
           {processSteps.map((step, index) => (
             <div 
               key={step.id} 
-              className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-24`}
+              className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-16 lg:gap-32`}
             >
               {/* Image Side */}
-              <div className="w-full lg:w-1/2 aspect-[4/3] relative group overflow-hidden shadow-lg">
-                <div className={`absolute inset-0 ${step.imageColor} transition-transform duration-1000 group-hover:scale-105`} />
-                <div className="absolute inset-0 flex items-center justify-center text-ivory/30 font-serif text-[10rem] font-bold select-none mix-blend-overlay">
-                  {step.id}
+              <div className="w-full lg:w-1/2 aspect-[4/3] relative group overflow-hidden bg-earth-100 shadow-sm p-8">
+                <div className={`absolute inset-0 ${step.imageColor} mix-blend-multiply opacity-20`} />
+                <div className="w-full h-full border border-ink-900/10 flex items-center justify-center relative overflow-hidden group-hover:border-ink-900/20 transition-colors duration-700">
+                  <div className="absolute inset-0 bg-white/50 backdrop-blur-sm" />
+                  <div className="relative text-ink-900/10 font-serif text-[12rem] leading-none font-light select-none transform group-hover:scale-105 transition-transform duration-[2s] ease-out">
+                    {step.id}
+                  </div>
                 </div>
               </div>
 
               {/* Text Side */}
               <div className="w-full lg:w-1/2">
-                <span className="text-accent-gold font-serif text-3xl mb-4 block">
-                  {step.id} —
+                <span className="text-ink-800/40 text-sm tracking-[0.2em] uppercase mb-6 block">
+                  Step {step.id}
                 </span>
-                <h2 className="font-serif text-3xl md:text-4xl mb-6">
+                <h2 className="font-serif text-4xl md:text-5xl mb-8 leading-[1.1] text-ink-900">
                   {step.title}
                 </h2>
-                <p className="font-light text-lg leading-relaxed text-ink-800/80">
+                <p className="font-light text-lg leading-[1.8] text-ink-800/80 max-w-lg">
                   {step.description}
                 </p>
               </div>

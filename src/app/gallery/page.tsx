@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { artworks, ArtworkCategory } from "@/data/artworks";
 
@@ -24,24 +25,27 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-ivory">
       {/* Header */}
-      <section className="py-24 px-6 text-center bg-ink-900 text-ivory">
-        <h1 className="font-serif text-4xl md:text-6xl tracking-widest mb-6">GALLERY</h1>
-        <p className="font-light tracking-wide max-w-xl mx-auto text-ivory/80">
+      <section className="py-24 px-6 text-center bg-ivory text-ink-900 border-b border-ink-900/10">
+        <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
+          The Collections
+        </span>
+        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">Selected Works</h1>
+        <p className="font-light tracking-wide max-w-xl mx-auto text-ink-800/80 leading-[1.8]">
           A curated collection of intricate patterns, divine motifs, and mindful creations.
         </p>
       </section>
 
       {/* Filters */}
-      <section className="py-12 px-6 border-b border-ink-900/10">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 md:gap-8">
+      <section className="py-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-6 md:gap-12">
           {CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`text-xs md:text-sm tracking-widest uppercase transition-all duration-300 ${
+              className={`text-[10px] md:text-xs tracking-[0.2em] uppercase transition-all duration-300 pb-2 ${
                 activeCategory === category
-                  ? "text-accent-gold font-medium border-b border-accent-gold pb-1"
-                  : "text-ink-800/60 hover:text-ink-900"
+                  ? "text-ink-900 border-b border-ink-900 font-medium"
+                  : "text-ink-800/50 hover:text-ink-900"
               }`}
             >
               {category}
@@ -67,20 +71,20 @@ export default function GalleryPage() {
                 transition={{ duration: 0.4 }}
                 className="break-inside-avoid relative group"
               >
-                <Link href={`/gallery/${artwork.id}`} className="block relative overflow-hidden bg-earth-100">
-                  {/* Since we don't have real images with varying aspect ratios, we use a placeholder block. 
-                      In reality, the image tag would dictate the height. */}
-                  <div 
-                    className="w-full bg-earth-200 transition-transform duration-700 group-hover:scale-105"
-                    style={{ height: `${Math.random() * 200 + 300}px` }} 
-                  />
-                  
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/60 transition-all duration-500 flex flex-col justify-end p-6">
-                    <div className="transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                      <h3 className="text-ivory font-serif text-xl mb-1">{artwork.title}</h3>
-                      <p className="text-accent-gold text-xs tracking-widest uppercase">{artwork.category}</p>
-                    </div>
+                <Link href={`/gallery/${artwork.id}`} className="block group">
+                  <div className={`relative overflow-hidden bg-earth-100 shadow-sm ${artwork.orientation === 'portrait' ? 'aspect-[4/5]' : 'aspect-square'} mb-4`}>
+                    <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
+                    <Image 
+                      src={artwork.image}
+                      alt={artwork.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
+                    />
+                  </div>
+                  <div className="text-center md:text-left px-2">
+                    <h3 className="font-serif text-lg text-ink-900 group-hover:text-ink-800 transition-colors">{artwork.title}</h3>
+                    <p className="tracking-[0.2em] uppercase text-[10px] text-ink-800/50 mt-1">{artwork.category}</p>
                   </div>
                 </Link>
               </motion.div>
