@@ -9,21 +9,19 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative min-h-screen pt-32 pb-24 px-6 md:px-12 lg:px-24 flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[90vh] pt-32 pb-24 px-6 md:px-12 lg:px-24 flex items-center overflow-hidden border-b border-ink-900/10">
         <div className="max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
           
+          {/* LEFT: Statement */}
           <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1 relative z-20">
-            <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
-              Independent Artist Portfolio
-            </span>
-            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] text-ink-900 mb-8">
-              Art <br />
-              <span className="italic font-light text-ink-800">Diaries</span>
+            <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] text-ink-900 mb-8">
+              ART <br />
+              <span className="italic font-light text-ink-800">DIARIES</span>
             </h1>
-            <p className="font-light text-lg md:text-xl tracking-wide max-w-lg mb-12 text-ink-800/80 leading-relaxed">
-              Traditional Indian artistic inspiration expressed through intricate contemporary handmade art.
+            <p className="font-light text-xl tracking-wide max-w-lg mb-12 text-ink-800/80 leading-[1.8]">
+              An archive of intricate patterns, devotional art, handmade pieces and quiet details.
             </p>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
+            <div className="flex items-center gap-8">
               <Link
                 href="/gallery"
                 className="group flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-ink-900 hover:text-accent-gold transition-colors"
@@ -36,17 +34,26 @@ export default function Home() {
             </div>
           </div>
 
+          {/* RIGHT: Featured Artwork */}
           <div className="lg:col-span-7 relative order-1 lg:order-2 flex justify-end">
             {featuredWorks[0] && (
-              <div className="relative w-full max-w-3xl aspect-square shadow-2xl overflow-hidden bg-earth-100 p-8 md:p-12">
-                <div className="relative w-full h-full bg-white shadow-sm overflow-hidden">
+              <div className="relative w-full max-w-2xl group flex flex-col md:flex-row items-end gap-6">
+                <div className="relative w-full bg-earth-100 shadow-sm overflow-hidden flex items-center justify-center p-8 md:p-12">
+                  <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
                   <Image 
                     src={featuredWorks[0].image} 
                     alt={featuredWorks[0].title} 
-                    fill 
-                    className="object-contain"
+                    width={1000}
+                    height={featuredWorks[0].orientation === 'portrait' ? 1200 : 1000}
+                    className="w-full h-auto object-contain drop-shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-[1.5s]"
                     priority
                   />
+                </div>
+                
+                {/* Subtle Metadata */}
+                <div className="hidden md:flex flex-col text-xs tracking-[0.2em] uppercase text-ink-800/50 whitespace-nowrap" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+                  <span>01 / FEATURED WORK</span>
+                  <span className="mt-4 text-ink-900">{featuredWorks[0].category}</span>
                 </div>
               </div>
             )}
@@ -64,21 +71,22 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
             {featuredWorks.map((artwork, index) => (
               <Link 
                 href={`/gallery/${artwork.id}`} 
                 key={artwork.id}
-                className="group flex flex-col items-center"
+                className="group flex flex-col items-center break-inside-avoid mb-6"
               >
-                <div className={`relative w-full overflow-hidden bg-earth-100 shadow-sm ${artwork.orientation === 'portrait' ? 'aspect-[4/5]' : 'aspect-square'} mb-6`}>
+                <div className="relative w-full overflow-hidden bg-earth-100 shadow-sm mb-4">
                   <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/10 transition-colors duration-700 z-10" />
                   <Image 
                     src={artwork.image}
                     alt={artwork.title}
-                    fill
+                    width={800}
+                    height={artwork.orientation === 'portrait' ? 1000 : 800}
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
+                    className="w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
                   />
                 </div>
                 <div className="text-center">

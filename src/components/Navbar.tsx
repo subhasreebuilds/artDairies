@@ -30,25 +30,25 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-500 ease-out ${
-          scrolled ? "bg-white/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"
+        className={`fixed top-0 w-full z-50 transition-all duration-700 ease-out ${
+          scrolled ? "bg-ivory/90 backdrop-blur-md border-b border-ink-900/5 py-4" : "bg-transparent py-8"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="font-serif text-2xl tracking-wider text-ink-900">
-            ART DIARIES
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex items-center justify-between">
+          <Link href="/" className="font-serif text-xl md:text-2xl tracking-tight text-ink-900 flex items-center gap-2">
+            ART <span className="italic font-light text-ink-800">DIARIES</span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-10">
             {links.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
-                className={`text-sm tracking-widest uppercase transition-colors ${
+                className={`text-[10px] tracking-[0.2em] uppercase transition-colors pb-1 border-b ${
                   pathname === link.path
-                    ? "text-ink-900 font-medium"
-                    : "text-ink-800/60 hover:text-ink-900"
+                    ? "text-ink-900 border-ink-900 font-medium"
+                    : "text-ink-800/50 hover:text-ink-900 border-transparent hover:border-ink-900/30"
                 }`}
               >
                 {link.name}
@@ -58,9 +58,9 @@ export default function Navbar() {
               href="https://instagram.com/art_.diaries._"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ink-800/60 hover:text-accent-gold transition-colors ml-4"
+              className="text-ink-800/50 hover:text-ink-900 transition-colors ml-4"
             >
-              <Camera className="w-5 h-5" />
+              <Camera className="w-4 h-4" />
             </a>
           </nav>
 
@@ -81,16 +81,16 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-6 md:hidden flex flex-col"
+            className="fixed inset-0 z-40 bg-ivory pt-24 px-6 md:hidden flex flex-col"
           >
-            <nav className="flex flex-col gap-6 items-center mt-12">
+            <nav className="flex flex-col gap-8 items-center mt-12">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`text-2xl font-serif tracking-wider ${
-                    pathname === link.path ? "text-accent-gold" : "text-ink-900"
+                  className={`text-sm tracking-[0.2em] uppercase ${
+                    pathname === link.path ? "text-ink-900 font-medium" : "text-ink-800/60"
                   }`}
                 >
                   {link.name}
@@ -101,10 +101,10 @@ export default function Navbar() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}
-                className="mt-8 flex items-center gap-2 text-ink-800/60"
+                className="mt-8 flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-ink-800/60 hover:text-ink-900 transition-colors"
               >
-                <Camera className="w-5 h-5" />
-                <span>@art_.diaries._</span>
+                <Camera className="w-4 h-4" />
+                <span>Instagram</span>
               </a>
             </nav>
           </motion.div>

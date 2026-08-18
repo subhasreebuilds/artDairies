@@ -120,6 +120,7 @@ export const artworks: Artwork[] = [
     description: "[PLACEHOLDER: Description of artwork]",
     medium: "[PLACEHOLDER: Medium]",
     year: "[PLACEHOLDER: Year]",
+    featured: true,
     orientation: "portrait",
   },
   {
@@ -130,6 +131,7 @@ export const artworks: Artwork[] = [
     description: "[PLACEHOLDER: Description of artwork]",
     medium: "[PLACEHOLDER: Medium]",
     year: "[PLACEHOLDER: Year]",
+    featured: true,
     orientation: "square",
   },
   {
@@ -140,6 +142,7 @@ export const artworks: Artwork[] = [
     description: "[PLACEHOLDER: Description of artwork]",
     medium: "[PLACEHOLDER: Medium]",
     year: "[PLACEHOLDER: Year]",
+    featured: true,
     orientation: "square",
   },
   {

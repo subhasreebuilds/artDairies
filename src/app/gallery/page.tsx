@@ -65,21 +65,22 @@ export default function GalleryPage() {
               <motion.div
                 key={artwork.id}
                 layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                className="break-inside-avoid relative group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.5 }}
+                className="break-inside-avoid mb-8 relative group"
               >
                 <Link href={`/gallery/${artwork.id}`} className="block group">
-                  <div className={`relative overflow-hidden bg-earth-100 shadow-sm ${artwork.orientation === 'portrait' ? 'aspect-[4/5]' : 'aspect-square'} mb-4`}>
+                  <div className="relative overflow-hidden bg-earth-100 shadow-sm mb-4">
                     <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
                     <Image 
                       src={artwork.image}
                       alt={artwork.title}
-                      fill
+                      width={800}
+                      height={artwork.orientation === 'portrait' ? 1000 : 800}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
+                      className="w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
                     />
                   </div>
                   <div className="text-center md:text-left px-2">
