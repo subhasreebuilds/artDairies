@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { artworks } from "@/data/artworks";
 
 export default async function ArtworkDetailPage({ params }: { params: Promise<{ id: string }> }) {
