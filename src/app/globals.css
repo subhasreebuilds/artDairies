@@ -1,21 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FDFBF7;
-  --foreground: #1A1A1A;
+  --background: #F2EBF7;
+  --foreground: #342345;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ink-900: #1A1A1A;
-  --color-ink-800: #2D2D2D;
-  --color-ivory: #FDFBF7;
-  --color-ivory-dark: #F5F2EA;
-  --color-earth-100: #E8E3D8;
-  --color-earth-200: #D1C7B1;
-  --color-earth-300: #B9AB89;
-  --color-accent-gold: #C2A263;
+  --color-ink-900: #342345;
+  /* Deep eggplant purple */
+  --color-ink-800: #56416B;
+  /* Soft muted plum */
+  --color-ivory: #F2EBF7;
+  /* Soft, visible light lavender background */
+  --color-ivory-dark: #E6D8F0;
+  /* Slightly deeper lavender */
+  --color-earth-100: #FFFFFF;
+  /* Pure white for artwork card backgrounds */
+  --color-earth-200: #DCD0E8;
+  /* Richer lavender for overlays */
+  --color-earth-300: #C4B1D9;
+  --color-accent-gold: #8B6AA6;
+  /* Noticeable dusty lavender accent */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
 }

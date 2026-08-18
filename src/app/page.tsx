@@ -38,21 +38,21 @@ export default function Home() {
           <div className="lg:col-span-7 relative order-1 lg:order-2 flex justify-end">
             {featuredWorks[0] && (
               <div className="relative w-full max-w-2xl group flex flex-col md:flex-row items-end gap-6">
-                <div className="relative w-full bg-earth-100 shadow-sm overflow-hidden flex items-center justify-center p-8 md:p-12">
-                  <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
+                <div className="relative w-full bg-white shadow-xl rounded-2xl overflow-hidden flex items-center justify-center p-8 md:p-12 border border-ink-900/5 transition-transform duration-700 hover:shadow-2xl hover:-translate-y-2">
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
                   <Image 
                     src={featuredWorks[0].image} 
                     alt={featuredWorks[0].title} 
                     width={1000}
                     height={featuredWorks[0].orientation === 'portrait' ? 1200 : 1000}
-                    className="w-full h-auto object-contain drop-shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-[1.5s]"
+                    className="w-full h-auto object-contain drop-shadow-2xl transform group-hover:scale-105 transition-transform duration-[1.5s]"
                     priority
                   />
                 </div>
                 
                 {/* Subtle Metadata */}
                 <div className="hidden md:flex flex-col text-xs tracking-[0.2em] uppercase text-ink-800/50 whitespace-nowrap" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
-                  <span>01 / FEATURED WORK</span>
+                  <span className="text-accent-gold font-medium">01 / FEATURED WORK</span>
                   <span className="mt-4 text-ink-900">{featuredWorks[0].category}</span>
                 </div>
               </div>
@@ -78,20 +78,20 @@ export default function Home() {
                 key={artwork.id}
                 className="group flex flex-col items-center break-inside-avoid mb-6"
               >
-                <div className="relative w-full overflow-hidden bg-earth-100 shadow-sm mb-4">
-                  <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/10 transition-colors duration-700 z-10" />
+                <div className="relative w-full overflow-hidden bg-white shadow-md rounded-2xl border border-ink-900/5 mb-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
                   <Image 
                     src={artwork.image}
                     alt={artwork.title}
                     width={800}
                     height={artwork.orientation === 'portrait' ? 1000 : 800}
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="w-full h-auto object-contain transform group-hover:scale-[1.02] transition-transform duration-[1.5s] ease-out p-4 md:p-8"
+                    className="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out p-6 md:p-10"
                   />
                 </div>
-                <div className="text-center">
-                  <h3 className="font-serif text-xl text-ink-900 group-hover:text-ink-800 transition-colors mb-2">{artwork.title}</h3>
-                  <p className="tracking-[0.2em] uppercase text-[10px] text-ink-800/50">{artwork.category}</p>
+                <div className="text-center mt-2">
+                  <h3 className="font-serif text-xl text-ink-900 group-hover:text-accent-gold transition-colors mb-1">{artwork.title}</h3>
+                  <p className="tracking-[0.2em] uppercase text-[10px] text-ink-800/60 font-medium">{artwork.category}</p>
                 </div>
               </Link>
             ))}
@@ -106,13 +106,17 @@ export default function Home() {
       </section>
 
       {/* Philosophy */}
-      <section className="py-32 px-6 bg-ink-900 text-ivory text-center">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-5xl tracking-wide mb-8 leading-tight">
+      <section className="py-32 px-6 bg-earth-100 text-ink-900 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-white/20 pointer-events-none" />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
+            Artistic Philosophy
+          </span>
+          <h2 className="font-serif text-4xl md:text-6xl tracking-tight mb-10 leading-[1.1]">
             Where Tradition <br/>
-            <span className="text-accent-gold italic font-light">Meets Detail</span>
+            <span className="text-ink-800 italic font-light">Meets Detail</span>
           </h2>
-          <p className="font-light text-lg md:text-xl leading-relaxed text-ivory/80 max-w-2xl mx-auto">
+          <p className="font-light text-lg md:text-xl leading-[1.9] text-ink-800/80 max-w-2xl mx-auto">
             Every piece is a labor of love, blending the rich heritage of Indian art forms with meticulous contemporary detailing. From the sacred motifs of Odisha to the meditative geometry of mandalas, my art is an ongoing diary of spiritual and aesthetic exploration.
           </p>
         </div>
@@ -126,20 +130,40 @@ export default function Home() {
           </span>
           <h2 className="font-serif text-3xl md:text-5xl tracking-wide text-ink-900 mb-20">Curated Collections</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
             {[
-              { title: 'Mandala & Dot Art', count: '02' },
-              { title: 'Odisha & Jagannath', count: '03' },
-              { title: 'Pen & Ink', count: '02' },
-              { title: 'Handmade Art', count: '03' }
-            ].map((collection) => (
-              <Link href={`/gallery?category=${collection.title.split(' & ')[0].toUpperCase()}`} key={collection.title} className="group flex flex-col items-center justify-center p-12 border border-ink-900/5 hover:border-accent-gold/30 hover:bg-earth-100 transition-all duration-700">
-                <span className="text-ink-800/30 font-serif text-sm italic mb-4">{collection.count}</span>
-                <h3 className="font-serif text-xl md:text-2xl text-ink-900">
-                  {collection.title}
-                </h3>
-              </Link>
-            ))}
+              { name: 'MANDALA', title: 'Mandala & Dot Art' },
+              { name: 'ODISHA & JAGANNATH', title: 'Odisha & Jagannath' },
+              { name: 'PEN & INK', title: 'Pen & Ink' },
+              { name: 'HANDMADE', title: 'Handmade Art' }
+            ].map((cat) => {
+              const catWorks = artworks.filter(a => a.category === cat.name);
+              const count = catWorks.length.toString().padStart(2, '0');
+              const image = catWorks[0]?.image || '/artworks/Jagannath.png';
+              
+              return (
+                <Link 
+                  href={`/gallery?category=${encodeURIComponent(cat.name)}`} 
+                  key={cat.title} 
+                  className="group relative flex flex-col items-center justify-center aspect-[4/5] overflow-hidden bg-white rounded-2xl shadow-md border border-ink-900/5 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 via-ink-900/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+                  <Image 
+                    src={image}
+                    alt={cat.title}
+                    fill
+                    className="object-cover transform group-hover:scale-110 group-hover:rotate-1 transition-transform duration-[2s] ease-out"
+                  />
+                  
+                  <div className="relative z-20 flex flex-col items-center justify-center p-8 text-white w-full h-full">
+                    <span className="text-accent-gold font-serif text-sm italic mb-auto mt-2 drop-shadow-md">{count} Works</span>
+                    <h3 className="font-serif text-2xl text-center text-white mt-auto mb-2 tracking-wide drop-shadow-lg group-hover:-translate-y-1 transition-transform duration-500">
+                      {cat.title}
+                    </h3>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
