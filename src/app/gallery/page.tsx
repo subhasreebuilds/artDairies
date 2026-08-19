@@ -84,38 +84,49 @@ function GalleryContent() {
       <section className="py-16 px-6 md:px-12 max-w-[1600px] mx-auto">
         <motion.div 
           layout
-          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6"
+          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8"
         >
           <AnimatePresence>
-            {filteredArtworks.map((artwork) => (
+            {filteredArtworks.map((artwork, index) => (
               <motion.div
                 key={artwork.id}
                 layout
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: index * 0.04 }}
                 className="break-inside-avoid mb-8 relative group"
               >
-                <Link href={`/gallery/${artwork.id}`} className="relative block group w-full aspect-[4/5] shadow-xl rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(200,96,90,0.35)] hover:ring-2 hover:ring-accent-gold/60 transition-all duration-500">
+                {/* Alternate aspect ratio for visual rhythm: portrait / square / portrait / tall */}
+                <Link
+                  href={`/gallery/${artwork.id}`}
+                  className={`relative block w-full overflow-hidden rounded-3xl shadow-lg
+                    hover:-translate-y-3 hover:shadow-[0_30px_60px_-12px_rgba(200,96,90,0.4)]
+                    hover:ring-2 hover:ring-accent-gold/50 transition-all duration-500
+                    ${index % 5 === 2 ? "aspect-square" : index % 5 === 4 ? "aspect-[3/4]" : "aspect-[4/5]"}
+                  `}
+                >
                   <Image 
                     src={artwork.image}
                     alt={artwork.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transform group-hover:scale-110 transition-transform duration-[1.2s] ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/20 to-transparent" />
-                  
-                  {/* Pink pill badge — always visible over the image */}
-                  <div className="absolute top-4 left-4 z-20">
-                    <span className="bg-accent-gold text-white text-[9px] tracking-[0.18em] uppercase font-semibold px-3 py-1.5 rounded-full">
+
+                  {/* Overlay — subtle always, stronger on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  {/* Pink pill badge top-left */}
+                  <div className="absolute top-4 left-4 z-20 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                    <span className="bg-accent-gold text-white text-[9px] tracking-[0.18em] uppercase font-semibold px-3 py-1.5 rounded-full shadow-md">
                       {artwork.category}
                     </span>
                   </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 flex flex-col items-start z-20">
-                    <h3 className="font-serif text-xl md:text-2xl text-white leading-tight">{artwork.title}</h3>
+                  {/* Title slides up on hover */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7 z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-400">
+                    <h3 className="font-serif text-lg md:text-xl text-white leading-tight">{artwork.title}</h3>
                   </div>
                 </Link>
               </motion.div>
