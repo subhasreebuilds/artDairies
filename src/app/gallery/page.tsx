@@ -97,7 +97,7 @@ function GalleryContent() {
                 transition={{ duration: 0.5 }}
                 className="break-inside-avoid mb-8 relative group"
               >
-                <Link href={`/gallery/${artwork.id}`} className="relative block group w-full aspect-[4/5] shadow-xl rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(86,65,107,0.3)] transition-all duration-500">
+                <Link href={`/gallery/${artwork.id}`} className="relative block group w-full aspect-[4/5] shadow-xl rounded-3xl overflow-hidden hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(200,96,90,0.35)] hover:ring-2 hover:ring-accent-gold/60 transition-all duration-500">
                   <Image 
                     src={artwork.image}
                     alt={artwork.title}
@@ -105,11 +105,17 @@ function GalleryContent() {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transform group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-ink-900/20 to-transparent opacity-90" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/85 via-ink-900/20 to-transparent" />
                   
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 flex flex-col items-center text-center z-20">
-                    <h3 className="font-serif text-xl md:text-2xl text-white mb-2">{artwork.title}</h3>
-                    <p className="tracking-[0.2em] uppercase text-[10px] text-accent-gold font-medium">{artwork.category}</p>
+                  {/* Pink pill badge — always visible over the image */}
+                  <div className="absolute top-4 left-4 z-20">
+                    <span className="bg-accent-gold text-white text-[9px] tracking-[0.18em] uppercase font-semibold px-3 py-1.5 rounded-full">
+                      {artwork.category}
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 flex flex-col items-start z-20">
+                    <h3 className="font-serif text-xl md:text-2xl text-white leading-tight">{artwork.title}</h3>
                   </div>
                 </Link>
               </motion.div>
