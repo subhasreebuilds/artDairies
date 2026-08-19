@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F8F5F2;
+  --background: #FBF7F5;
   --foreground: #121212;
 }
 
@@ -10,8 +10,8 @@
   --color-foreground: var(--foreground);
   --color-ink-900: #121212;
   --color-ink-800: #2C2C2C;
-  --color-cream: #FAF0EC;
-  --color-accent-gold: #D4B2A7;
+  --color-cream: #FAE8E3;
+  --color-accent-gold: #C8605A;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
   --font-script: var(--font-script), cursive;

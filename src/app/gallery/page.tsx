@@ -47,13 +47,15 @@ function GalleryContent() {
   );
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-transparent">
       {/* Header */}
-      <section className="py-24 px-6 text-center bg-ivory text-ink-900 border-b border-ink-900/10">
+      <section className="pt-36 pb-20 px-6 text-center bg-transparent text-ink-900 border-b border-ink-900/10">
         <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
           The Collections
         </span>
-        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">Selected Works</h1>
+        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">
+          Selected <span className="italic font-light text-accent-gold">Works</span>
+        </h1>
         <p className="font-light tracking-wide max-w-xl mx-auto text-ink-800/80 leading-[1.8]">
           A curated collection of intricate patterns, divine motifs, and mindful creations.
         </p>
@@ -66,10 +68,10 @@ function GalleryContent() {
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
-              className={`text-[10px] md:text-xs tracking-[0.2em] uppercase transition-all duration-300 pb-2 ${
+              className={`text-[10px] md:text-xs tracking-[0.2em] uppercase transition-all duration-300 pb-2 border-b-2 ${
                 activeCategory === category
-                  ? "text-ink-900 border-b border-ink-900 font-medium"
-                  : "text-ink-800/50 hover:text-ink-900"
+                  ? "text-ink-900 border-accent-gold font-semibold"
+                  : "text-ink-800/50 hover:text-ink-900 border-transparent"
               }`}
             >
               {category}
@@ -128,7 +130,7 @@ function GalleryContent() {
 export default function GalleryPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-ivory flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F5F2] flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-ink-900 border-t-transparent rounded-full animate-spin"></div>
       </div>
     }>

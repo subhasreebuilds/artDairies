@@ -36,13 +36,15 @@ export default function ProcessPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-ivory text-ink-900 pb-24">
+    <div className="min-h-screen bg-transparent text-ink-900 pb-24">
       {/* Header */}
-      <section className="py-24 px-6 text-center max-w-4xl mx-auto border-b border-ink-900/10 mb-24">
+      <section className="pt-36 pb-20 px-6 text-center max-w-4xl mx-auto border-b border-ink-900/10 mb-24">
         <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
           Behind the Canvas
         </span>
-        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">My Process</h1>
+        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">
+          My <span className="italic font-light text-accent-gold">Process</span>
+        </h1>
         <p className="font-light text-lg tracking-wide text-ink-800/80 leading-[1.8]">
           Art is a meditation. Creating these pieces requires hours of focus, patience, and a deep connection to the present moment. Here is a glimpse into how a blank surface transforms into a finished artwork.
         </p>
@@ -58,7 +60,7 @@ export default function ProcessPage() {
             >
               {/* Image Side */}
               <div className="w-full lg:w-1/2 relative group p-8 md:p-12">
-                <div className="relative w-full aspect-square bg-earth-100 shadow-sm overflow-hidden flex items-center justify-center p-8">
+                <div className="relative w-full aspect-square bg-white/40 backdrop-blur-sm shadow-xl rounded-3xl border border-ink-900/5 overflow-hidden flex items-center justify-center p-8 transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(86,65,107,0.15)]">
                   <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
                   <Image 
                     src={step.image} 
@@ -75,7 +77,7 @@ export default function ProcessPage() {
 
               {/* Text Side */}
               <div className="w-full lg:w-1/2 relative z-10">
-                <span className="text-ink-800/40 text-sm tracking-[0.2em] uppercase mb-6 block">
+                <span className="text-accent-gold text-sm tracking-[0.2em] uppercase mb-6 block">
                   Step {step.id}
                 </span>
                 <h2 className="font-serif text-4xl md:text-5xl mb-8 leading-[1.1] text-ink-900">

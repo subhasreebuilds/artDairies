@@ -4,8 +4,8 @@ import { ArrowRight } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-ivory text-ink-900">
-      <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+    <div className="min-h-screen bg-transparent text-ink-900">
+      <div className="max-w-7xl mx-auto px-6 pt-36 pb-24">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
           
@@ -31,17 +31,17 @@ export default function AboutPage() {
             </span>
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12 leading-[1.1] text-ink-900">
               The Artist <br/>
-              <span className="italic font-light text-ink-800 text-4xl md:text-5xl lg:text-6xl">Behind the Diaries</span>
+              <span className="italic font-light text-accent-gold text-4xl md:text-5xl lg:text-6xl">Behind the Diaries</span>
             </h1>
 
-            <div className="space-y-8 font-light leading-[1.8] text-ink-800/80 text-lg">
-              <p>
+            <div className="space-y-8 font-serif leading-[2] text-ink-800/80 text-xl">
+              <p className="italic">
                 I explore traditional Indian motifs through intricate, contemporary handmade art. Specializing in pen and ink and dot mandalas, my work is a continuous exploration of culture, patience, and symmetry.
               </p>
-              <p>
+              <p className="italic">
                 My journey began as a child, deeply fascinated by the rich, storytelling elements of Pattachitra. As a self-taught artist, I found myself drawn to the deeply meditative process of dot work—a practice that offers me profound peace in an otherwise fast-paced world.
               </p>
-              <p>
+              <p className="italic">
                 For me, art is home. Every piece I create is an invitation into that quiet, peaceful space. I hope that when viewers look closely at my work, they feel a sense of gladness and joy, and that it quietly deepens their own love and appreciation for the arts.
               </p>
             </div>
