@@ -25,48 +25,48 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="max-w-[1600px] w-full mx-auto px-6 md:px-12 lg:px-24 pt-32 pb-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 items-center">
+        <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-28 sm:pt-32 pb-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-0 items-center">
 
           {/* LEFT: Statement */}
           <div className="flex flex-col justify-center order-2 lg:order-1 relative z-20">
 
             {/* Decorative watermark behind text */}
-            <div className="absolute -left-8 -top-12 font-script text-[14rem] md:text-[18rem] text-accent-gold/8 leading-none select-none pointer-events-none">
+            <div className="absolute -left-4 sm:-left-8 -top-8 sm:-top-12 font-script text-[8rem] sm:text-[14rem] md:text-[18rem] text-accent-gold/8 leading-none select-none pointer-events-none">
               Art
             </div>
 
             {/* Tag line */}
-            <span className="text-accent-gold text-[10px] tracking-[0.35em] uppercase mb-8 block font-medium relative z-10">
+            <span className="text-accent-gold text-[9px] sm:text-[10px] tracking-[0.35em] uppercase mb-4 sm:mb-8 block font-medium relative z-10">
               ✦ Original Handmade Art
             </span>
 
             {/* Main heading */}
-            <h1 className="font-serif relative z-10 mb-6 leading-[1.05]">
-              <span className="block text-7xl md:text-8xl lg:text-9xl text-ink-900 tracking-tight">ART</span>
-              <span className="block text-7xl md:text-8xl lg:text-9xl italic font-light text-accent-gold tracking-tight">Diaries.</span>
+            <h1 className="font-serif relative z-10 mb-4 sm:mb-6 leading-[1.05]">
+              <span className="block text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-ink-900 tracking-tight">ART</span>
+              <span className="block text-5xl sm:text-7xl md:text-8xl lg:text-9xl italic font-light text-accent-gold tracking-tight">Diaries.</span>
             </h1>
 
             {/* Decorative horizontal rule */}
-            <div className="flex items-center gap-4 mb-8 relative z-10">
-              <div className="h-px w-12 bg-accent-gold/50" />
-              <span className="text-ink-800/40 text-[10px] tracking-[0.3em] uppercase">Bhubaneswar, Odisha</span>
+            <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 relative z-10">
+              <div className="h-px w-8 sm:w-12 bg-accent-gold/50" />
+              <span className="text-ink-800/40 text-[9px] sm:text-[10px] tracking-[0.3em] uppercase">Bhubaneswar, Odisha</span>
             </div>
 
-            <p className="font-sans font-light text-lg tracking-wide max-w-md mb-12 text-ink-800/70 leading-[1.9] relative z-10">
+            <p className="font-sans font-light text-base sm:text-lg tracking-wide max-w-md mb-8 sm:mb-12 text-ink-800/70 leading-[1.8] sm:leading-[1.9] relative z-10">
               An archive of intricate patterns, devotional art, handmade pieces and quiet details — where tradition meets contemporary craft.
             </p>
 
-            <div className="flex items-center gap-8 relative z-10">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 relative z-10">
               <Link
                 href="/gallery"
-                className="group flex items-center gap-3 bg-ink-900 text-white text-xs tracking-[0.2em] uppercase px-8 py-4 rounded-full hover:bg-accent-gold transition-colors duration-300"
+                className="group flex items-center justify-center gap-3 bg-ink-900 text-white text-xs tracking-[0.2em] uppercase px-8 py-4 rounded-full hover:bg-accent-gold transition-colors duration-300 shadow-md"
               >
                 Explore Gallery
                 <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/about"
-                className="group flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-ink-800/60 hover:text-accent-gold transition-colors"
+                className="group flex items-center justify-center gap-2 text-xs tracking-[0.2em] uppercase text-ink-800/60 hover:text-accent-gold transition-colors py-2"
               >
                 About Me <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
               </Link>

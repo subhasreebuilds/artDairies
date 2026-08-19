@@ -20,9 +20,14 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
+  // Close mobile nav when pathname changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 30);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -32,24 +37,24 @@ export default function Navbar() {
     <>
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-500 ease-out bg-[#F8F5F2]/90 backdrop-blur-md border-b border-ink-900/5 ${
-          scrolled ? "py-4 shadow-sm" : "py-6"
+          scrolled ? "py-3 shadow-sm" : "py-5 md:py-6"
         }`}
       >
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link href="/" className="font-serif text-xl md:text-2xl tracking-tight text-ink-900 flex items-center gap-2">
-            ART <span className="italic font-light text-ink-800">DIARIES</span>
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between">
+          <Link href="/" className="font-serif text-lg sm:text-xl md:text-2xl tracking-tight text-ink-900 flex items-center gap-1.5 sm:gap-2">
+            ART <span className="italic font-light text-accent-gold">DIARIES</span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-10">
+          <nav className="hidden md:flex items-center gap-8 lg:gap-10">
             {links.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
                 className={`text-[10px] tracking-[0.2em] uppercase transition-colors pb-1 border-b ${
                   pathname === link.path
-                    ? "text-ink-900 border-ink-900 font-medium"
-                    : "text-ink-800/50 hover:text-ink-900 border-transparent hover:border-ink-900/30"
+                    ? "text-ink-900 border-accent-gold font-semibold"
+                    : "text-ink-800/50 hover:text-ink-900 border-transparent hover:border-accent-gold/40"
                 }`}
               >
                 {link.name}
@@ -59,7 +64,8 @@ export default function Navbar() {
               href="https://instagram.com/art_.diaries._"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ink-800/50 hover:text-ink-900 transition-colors ml-4"
+              className="text-ink-800/50 hover:text-accent-gold transition-colors ml-2"
+              aria-label="Instagram"
             >
               <InstagramIcon className="w-4 h-4" />
             </a>
@@ -67,8 +73,9 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden text-ink-900"
+            className="md:hidden text-ink-900 p-2 -mr-2 rounded-lg focus:outline-none"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -79,38 +86,44 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-ivory pt-24 px-6 md:hidden flex flex-col"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-[#FBF7F5]/98 backdrop-blur-xl pt-28 px-6 md:hidden flex flex-col justify-between pb-12"
           >
-            <nav className="flex flex-col gap-8 items-center mt-12">
+            <nav className="flex flex-col gap-6 items-center">
               {links.map((link) => (
                 <Link
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`text-sm tracking-[0.2em] uppercase ${
-                    pathname === link.path ? "text-ink-900 font-medium" : "text-ink-800/60"
+                  className={`text-base tracking-[0.25em] uppercase transition-colors ${
+                    pathname === link.path ? "text-accent-gold font-serif text-xl italic" : "text-ink-800/80 font-light"
                   }`}
                 >
                   {link.name}
                 </Link>
               ))}
+            </nav>
+
+            <div className="flex flex-col items-center gap-4 pt-8 border-t border-ink-900/10">
               <a
                 href="https://instagram.com/art_.diaries._"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}
-                className="mt-8 flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-ink-800/60 hover:text-ink-900 transition-colors"
+                className="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-ink-800/70 hover:text-accent-gold transition-colors"
               >
-                <InstagramIcon className="w-4 h-4" />
-                <span>Instagram</span>
+                <InstagramIcon className="w-4 h-4 text-accent-gold" />
+                <span>@art_.diaries._</span>
               </a>
-            </nav>
+              <p className="text-[10px] text-ink-800/40 uppercase tracking-widest">Bhubaneswar, Odisha</p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 }
+

@@ -49,26 +49,26 @@ function GalleryContent() {
   return (
     <div className="min-h-screen bg-transparent">
       {/* Header */}
-      <section className="pt-36 pb-20 px-6 text-center bg-transparent text-ink-900 border-b border-ink-900/10">
-        <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
+      <section className="pt-28 sm:pt-36 pb-14 sm:pb-20 px-4 sm:px-6 text-center bg-transparent text-ink-900 border-b border-ink-900/10">
+        <span className="text-accent-gold text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4 sm:mb-6 block font-light">
           The Collections
         </span>
-        <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-8">
+        <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl tracking-tight mb-4 sm:mb-8">
           Selected <span className="italic font-light text-accent-gold">Works</span>
         </h1>
-        <p className="font-light tracking-wide max-w-xl mx-auto text-ink-800/80 leading-[1.8]">
+        <p className="font-light text-sm sm:text-base tracking-wide max-w-xl mx-auto text-ink-800/80 leading-[1.8]">
           A curated collection of intricate patterns, divine motifs, and mindful creations.
         </p>
       </section>
 
-      {/* Filters */}
-      <section className="py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-6 md:gap-12">
+      {/* Filters — horizontally scrollable on mobile */}
+      <section className="py-8 sm:py-12 px-4 sm:px-6 border-b border-ink-900/5">
+        <div className="max-w-7xl mx-auto flex items-center justify-start sm:justify-center gap-4 sm:gap-8 md:gap-12 overflow-x-auto no-scrollbar pb-2 px-2">
           {CATEGORIES.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
-              className={`text-[10px] md:text-xs tracking-[0.2em] uppercase transition-all duration-300 pb-2 border-b-2 ${
+              className={`whitespace-nowrap text-[10px] sm:text-xs tracking-[0.2em] uppercase transition-all duration-300 pb-2 border-b-2 shrink-0 ${
                 activeCategory === category
                   ? "text-ink-900 border-accent-gold font-semibold"
                   : "text-ink-800/50 hover:text-ink-900 border-transparent"
@@ -81,10 +81,10 @@ function GalleryContent() {
       </section>
 
       {/* Gallery Grid */}
-      <section className="py-16 px-6 md:px-12 max-w-[1600px] mx-auto">
+      <section className="py-12 sm:py-16 px-4 sm:px-6 md:px-12 max-w-[1600px] mx-auto">
         <motion.div 
           layout
-          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8"
+          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 sm:gap-8 space-y-6 sm:space-y-8"
         >
           <AnimatePresence>
             {filteredArtworks.map((artwork, index) => (
@@ -95,9 +95,9 @@ function GalleryContent() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5, delay: index * 0.04 }}
-                className="break-inside-avoid mb-8 relative group"
+                className="break-inside-avoid mb-6 sm:mb-8 relative group"
               >
-                {/* Alternate aspect ratio for visual rhythm: portrait / square / portrait / tall */}
+                {/* Alternate aspect ratio for visual rhythm */}
                 <Link
                   href={`/gallery/${artwork.id}`}
                   className={`relative block w-full overflow-hidden rounded-3xl shadow-lg
@@ -114,19 +114,19 @@ function GalleryContent() {
                     className="object-cover transform group-hover:scale-110 transition-transform duration-[1.2s] ease-out"
                   />
 
-                  {/* Overlay — subtle always, stronger on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                  {/* Overlay — strong on mobile so titles are readable without hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/20 to-transparent sm:via-transparent sm:from-ink-900/80 opacity-90 sm:opacity-80 sm:group-hover:opacity-100 transition-opacity duration-500" />
 
-                  {/* Pink pill badge top-left */}
-                  <div className="absolute top-4 left-4 z-20 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                    <span className="bg-accent-gold text-white text-[9px] tracking-[0.18em] uppercase font-semibold px-3 py-1.5 rounded-full shadow-md">
+                  {/* Pink pill badge top-left — visible on mobile */}
+                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:translate-y-1 sm:group-hover:translate-y-0 transition-all duration-300">
+                    <span className="bg-accent-gold text-white text-[8px] sm:text-[9px] tracking-[0.18em] uppercase font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-md">
                       {artwork.category}
                     </span>
                   </div>
 
-                  {/* Title slides up on hover */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7 z-20 translate-y-2 group-hover:translate-y-0 transition-transform duration-400">
-                    <h3 className="font-serif text-lg md:text-xl text-white leading-tight">{artwork.title}</h3>
+                  {/* Title — always visible on mobile bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-7 z-20 sm:translate-y-2 sm:group-hover:translate-y-0 transition-transform duration-400">
+                    <h3 className="font-serif text-base sm:text-xl text-white leading-tight">{artwork.title}</h3>
                   </div>
                 </Link>
               </motion.div>

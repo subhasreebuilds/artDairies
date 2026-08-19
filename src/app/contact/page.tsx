@@ -36,57 +36,57 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-ink-900 pb-24">
-      <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+    <div className="min-h-screen bg-transparent text-ink-900 pb-16 sm:pb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16 md:py-24">
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 pt-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 pt-20 sm:pt-24">
           
           {/* Info Side */}
           <div className="flex flex-col justify-center">
-            <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-8 block font-light">
+            <span className="text-accent-gold text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-4 sm:mb-8 block font-medium">
               Get in Touch
             </span>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-tight mb-8 text-ink-900">
+            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl tracking-tight mb-6 sm:mb-8 text-ink-900">
               Inquiries &<br />
-              <span className="italic font-light text-ink-800">Commissions</span>
+              <span className="italic font-light text-accent-gold">Commissions</span>
             </h1>
-            <p className="font-light text-lg text-ink-800/80 mb-16 max-w-md leading-[1.8]">
+            <p className="font-light text-base sm:text-lg text-ink-800/80 mb-10 sm:mb-16 max-w-md leading-[1.8]">
               For original artwork inquiries, commissions, collaborations, or just to say hello, please fill out the form or reach out via Instagram.
             </p>
 
-            <div className="space-y-12">
+            <div className="space-y-8 sm:space-y-12">
               <div>
-                <h3 className="font-serif text-2xl mb-6 text-ink-900">Services</h3>
-                <ul className="space-y-3 font-light text-ink-800/80">
-                  <li className="flex items-center gap-4"><span className="w-1 h-1 bg-accent-gold rounded-full" /> Commissioned Artwork</li>
-                  <li className="flex items-center gap-4"><span className="w-1 h-1 bg-accent-gold rounded-full" /> Brand Collaborations</li>
-                  <li className="flex items-center gap-4"><span className="w-1 h-1 bg-accent-gold rounded-full" /> Exhibition Opportunities</li>
-                  <li className="flex items-center gap-4"><span className="w-1 h-1 bg-accent-gold rounded-full" /> Purchasing Original Pieces</li>
+                <h3 className="font-serif text-xl sm:text-2xl mb-4 sm:mb-6 text-ink-900">Services</h3>
+                <ul className="space-y-3 font-light text-sm sm:text-base text-ink-800/80">
+                  <li className="flex items-center gap-3 sm:gap-4"><span className="w-1.5 h-1.5 bg-accent-gold rounded-full shrink-0" /> Commissioned Artwork</li>
+                  <li className="flex items-center gap-3 sm:gap-4"><span className="w-1.5 h-1.5 bg-accent-gold rounded-full shrink-0" /> Brand Collaborations</li>
+                  <li className="flex items-center gap-3 sm:gap-4"><span className="w-1.5 h-1.5 bg-accent-gold rounded-full shrink-0" /> Exhibition Opportunities</li>
+                  <li className="flex items-center gap-3 sm:gap-4"><span className="w-1.5 h-1.5 bg-accent-gold rounded-full shrink-0" /> Purchasing Original Pieces</li>
                 </ul>
               </div>
 
-              <div className="pt-12 border-t border-ink-900/10">
-                <h3 className="font-serif text-2xl mb-6 text-ink-900">Connect</h3>
-                <div className="space-y-6">
+              <div className="pt-8 sm:pt-12 border-t border-ink-900/10">
+                <h3 className="font-serif text-xl sm:text-2xl mb-4 sm:mb-6 text-ink-900">Connect</h3>
+                <div className="space-y-4 sm:space-y-6">
                   <a
                     href="https://instagram.com/art_.diaries._"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-6 text-ink-800 hover:text-ink-900 transition-colors font-light group"
+                    className="flex items-center gap-4 sm:gap-6 text-ink-800 hover:text-accent-gold transition-colors font-light group text-sm sm:text-base"
                   >
-                    <span className="bg-earth-100 p-4 rounded-full group-hover:bg-accent-gold/20 transition-colors">
-                      <InstagramIcon className="w-5 h-5 text-ink-900" />
+                    <span className="bg-white/60 p-3 sm:p-4 rounded-full group-hover:bg-accent-gold/20 transition-colors shadow-sm">
+                      <InstagramIcon className="w-4 h-4 sm:w-5 sm:h-5 text-accent-gold" />
                     </span>
                     <span className="tracking-wide">@art_.diaries._</span>
                   </a>
                   <a
                     href="mailto:hello.art.diaries@gmail.com"
-                    className="flex items-center gap-6 text-ink-800 hover:text-ink-900 transition-colors font-light group"
+                    className="flex items-center gap-4 sm:gap-6 text-ink-800 hover:text-accent-gold transition-colors font-light group text-sm sm:text-base"
                   >
-                    <span className="bg-earth-100 p-4 rounded-full group-hover:bg-accent-gold/20 transition-colors">
-                      <Mail className="w-5 h-5 text-ink-900" />
+                    <span className="bg-white/60 p-3 sm:p-4 rounded-full group-hover:bg-accent-gold/20 transition-colors shadow-sm">
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-accent-gold" />
                     </span>
-                    <span className="tracking-wide">hello.art.diaries@gmail.com</span>
+                    <span className="tracking-wide break-all sm:break-normal">hello.art.diaries@gmail.com</span>
                   </a>
                 </div>
               </div>
@@ -94,7 +94,7 @@ export default function ContactPage() {
           </div>
 
           {/* Form Side */}
-          <div className="bg-white/60 backdrop-blur-sm p-10 md:p-16 shadow-sm border border-ink-900/5 rounded-3xl relative overflow-hidden">
+          <div className="bg-white/60 backdrop-blur-sm p-6 sm:p-10 md:p-16 shadow-md border border-ink-900/5 rounded-3xl relative overflow-hidden">
             {/* Subtle background decoration */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-earth-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
             
