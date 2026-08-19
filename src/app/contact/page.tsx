@@ -7,22 +7,39 @@ import { InstagramIcon } from "@/components/icons/Instagram";
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setError("");
+    const form = e.currentTarget;
+    const data = {
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      subject: (form.elements.namedItem("subject") as HTMLSelectElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed");
       setIsSubmitted(true);
-    }, 1500);
+    } catch {
+      setError("Something went wrong. Please try again or email us directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-ivory text-ink-900 pb-24">
+    <div className="min-h-screen bg-transparent text-ink-900 pb-24">
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 pt-24">
           
           {/* Info Side */}
           <div className="flex flex-col justify-center">
@@ -77,7 +94,7 @@ export default function ContactPage() {
           </div>
 
           {/* Form Side */}
-          <div className="bg-white p-10 md:p-16 shadow-sm border border-ink-900/5 relative overflow-hidden">
+          <div className="bg-white/60 backdrop-blur-sm p-10 md:p-16 shadow-sm border border-ink-900/5 rounded-3xl relative overflow-hidden">
             {/* Subtle background decoration */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-earth-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
             
@@ -155,10 +172,13 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-ink-900 text-ivory py-4 uppercase tracking-widest text-sm hover:bg-ink-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+                  className="w-full bg-ink-900 text-white py-4 rounded-full uppercase tracking-widest text-xs font-semibold hover:bg-accent-gold transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-6"
                 >
                   {isSubmitting ? "Sending..." : "Submit Message"}
                 </button>
+              {error && (
+                <p className="text-red-500 text-xs text-center mt-2">{error}</p>
+              )}
               </form>
             )}
           </div>
