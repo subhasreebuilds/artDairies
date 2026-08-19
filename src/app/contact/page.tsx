@@ -1,13 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Mail, ArrowRight } from "lucide-react";
 import { InstagramIcon } from "@/components/icons/Instagram";
 
-export default function ContactPage() {
+function ContactForm() {
+  const searchParams = useSearchParams();
+  const artworkQuery = searchParams.get("artwork");
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState(artworkQuery ? "artwork" : "general");
+
+  useEffect(() => {
+    if (artworkQuery) {
+      setMessage(`Hi! I would like to inquire about purchasing or commissioning the artwork titled "${artworkQuery}". Please let me know availability and details.`);
+      setSubject("artwork");
+    }
+  }, [artworkQuery]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,6 +48,103 @@ export default function ContactPage() {
     }
   };
 
+  return (
+    <div className="bg-white/60 backdrop-blur-sm p-6 sm:p-10 md:p-16 shadow-md border border-ink-900/5 rounded-3xl relative overflow-hidden">
+      {/* Subtle background decoration */}
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-earth-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
+      
+      <h2 className="font-serif text-3xl mb-12 text-ink-900 relative z-10">Send a Message</h2>
+      
+      {isSubmitted ? (
+        <div className="h-full flex flex-col items-center justify-center text-center space-y-4 min-h-[400px]">
+          <div className="w-16 h-16 bg-accent-gold/20 text-accent-gold rounded-full flex items-center justify-center mb-4">
+            <ArrowRight className="w-8 h-8" />
+          </div>
+          <h3 className="font-serif text-2xl">Message Sent</h3>
+          <p className="font-light text-ink-800/80">
+            Thank you for reaching out. I will get back to you shortly.
+          </p>
+          <button 
+            onClick={() => setIsSubmitted(false)}
+            className="mt-8 text-sm uppercase tracking-widest border-b border-ink-900 pb-1 hover:text-accent-gold hover:border-accent-gold transition-colors"
+          >
+            Send Another Message
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="name" className="block text-xs uppercase tracking-widest mb-2 font-medium">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              required
+              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
+              placeholder="Jane Doe"
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-xs uppercase tracking-widest mb-2 font-medium">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              required
+              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
+              placeholder="jane@example.com"
+            />
+          </div>
+          <div>
+            <label htmlFor="subject" className="block text-xs uppercase tracking-widest mb-2 font-medium">
+              Subject
+            </label>
+            <select
+              id="subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light appearance-none rounded-none"
+            >
+              <option value="general">General Inquiry</option>
+              <option value="artwork">Original Artwork Purchase</option>
+              <option value="commission">Commission Request</option>
+              <option value="collab">Collaboration</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="message" className="block text-xs uppercase tracking-widest mb-2 font-medium">
+              Message
+            </label>
+            <textarea
+              id="message"
+              required
+              rows={4}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30 resize-none"
+              placeholder="Tell me about your inquiry..."
+            ></textarea>
+          </div>
+          
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-ink-900 text-white py-4 rounded-full uppercase tracking-widest text-xs font-semibold hover:bg-accent-gold transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-6"
+          >
+            {isSubmitting ? "Sending..." : "Submit Message"}
+          </button>
+        {error && (
+          <p className="text-red-500 text-xs text-center mt-2">{error}</p>
+        )}
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default function ContactPage() {
   return (
     <div className="min-h-screen bg-transparent text-ink-900 pb-16 sm:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16 md:py-24">
@@ -93,95 +203,10 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Form Side */}
-          <div className="bg-white/60 backdrop-blur-sm p-6 sm:p-10 md:p-16 shadow-md border border-ink-900/5 rounded-3xl relative overflow-hidden">
-            {/* Subtle background decoration */}
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-earth-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
-            
-            <h2 className="font-serif text-3xl mb-12 text-ink-900 relative z-10">Send a Message</h2>
-            
-            {isSubmitted ? (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 min-h-[400px]">
-                <div className="w-16 h-16 bg-accent-gold/20 text-accent-gold rounded-full flex items-center justify-center mb-4">
-                  <ArrowRight className="w-8 h-8" />
-                </div>
-                <h3 className="font-serif text-2xl">Message Sent</h3>
-                <p className="font-light text-ink-800/80">
-                  Thank you for reaching out. I will get back to you shortly.
-                </p>
-                <button 
-                  onClick={() => setIsSubmitted(false)}
-                  className="mt-8 text-sm uppercase tracking-widest border-b border-ink-900 pb-1 hover:text-accent-gold hover:border-accent-gold transition-colors"
-                >
-                  Send Another Message
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-xs uppercase tracking-widest mb-2 font-medium">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    required
-                    className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
-                    placeholder="Jane Doe"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-xs uppercase tracking-widest mb-2 font-medium">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    required
-                    className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
-                    placeholder="jane@example.com"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="subject" className="block text-xs uppercase tracking-widest mb-2 font-medium">
-                    Subject
-                  </label>
-                  <select
-                    id="subject"
-                    className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light appearance-none rounded-none"
-                  >
-                    <option value="general">General Inquiry</option>
-                    <option value="commission">Commission Request</option>
-                    <option value="artwork">Original Artwork Purchase</option>
-                    <option value="collab">Collaboration</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-xs uppercase tracking-widest mb-2 font-medium">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={4}
-                    className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30 resize-none"
-                    placeholder="Tell me about your inquiry..."
-                  ></textarea>
-                </div>
-                
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-ink-900 text-white py-4 rounded-full uppercase tracking-widest text-xs font-semibold hover:bg-accent-gold transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-6"
-                >
-                  {isSubmitting ? "Sending..." : "Submit Message"}
-                </button>
-              {error && (
-                <p className="text-red-500 text-xs text-center mt-2">{error}</p>
-              )}
-              </form>
-            )}
-          </div>
+          {/* Form Side with Suspense boundary */}
+          <Suspense fallback={<div className="bg-white/60 p-12 rounded-3xl animate-pulse min-h-[400px]" />}>
+            <ContactForm />
+          </Suspense>
 
         </div>
       </div>

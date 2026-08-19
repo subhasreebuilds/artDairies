@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, ChevronRight, ArrowRight, Expand } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ArrowRight, Expand, Sparkles } from "lucide-react";
 import { Artwork } from "@/data/artworks";
 import ArtworkViewer from "@/components/ArtworkViewer";
+import RoomVisualizer from "@/components/RoomVisualizer";
 
 interface Props {
   artwork: Artwork;
@@ -16,6 +17,7 @@ interface Props {
 
 export default function ArtworkDetailClient({ artwork, prevArtwork, nextArtwork, relatedArtworks }: Props) {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [isRoomVisualizerOpen, setIsRoomVisualizerOpen] = useState(false);
 
   return (
     <>
@@ -80,17 +82,24 @@ export default function ArtworkDetailClient({ artwork, prevArtwork, nextArtwork,
                 <p>{artwork.description}</p>
               </div>
 
-              <div className="mt-auto pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8">
+              <div className="mt-auto pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <button 
+                  onClick={() => setIsRoomVisualizerOpen(true)}
+                  className="bg-accent-gold text-white px-7 py-3.5 text-xs uppercase tracking-[0.2em] rounded-full hover:bg-ink-900 transition-colors duration-300 flex items-center justify-center gap-2 shadow-md font-medium"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  View in Room
+                </button>
                 <button 
                   onClick={() => setIsViewerOpen(true)}
-                  className="bg-ink-900 text-white px-8 py-4 text-xs uppercase tracking-[0.2em] rounded-full hover:bg-accent-gold transition-colors flex items-center justify-center gap-2 shadow-md"
+                  className="bg-ink-900 text-white px-7 py-3.5 text-xs uppercase tracking-[0.2em] rounded-full hover:bg-accent-gold transition-colors duration-300 flex items-center justify-center gap-2 shadow-md"
                 >
                   <Expand className="w-4 h-4" />
-                  View Fullscreen
+                  Fullscreen
                 </button>
                 <Link 
-                  href="/contact"
-                  className="group inline-flex items-center justify-center gap-4 border-b border-ink-900 pb-2 text-xs uppercase tracking-[0.2em] text-ink-900 hover:text-accent-gold hover:border-accent-gold transition-colors py-2"
+                  href={`/contact?artwork=${encodeURIComponent(artwork.title)}`}
+                  className="group inline-flex items-center justify-center gap-3 border-b border-ink-900 pb-2 text-xs uppercase tracking-[0.2em] text-ink-900 hover:text-accent-gold hover:border-accent-gold transition-colors py-2 sm:ml-2"
                 >
                   Inquire
                   <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -167,6 +176,12 @@ export default function ArtworkDetailClient({ artwork, prevArtwork, nextArtwork,
         nextArtwork={nextArtwork}
         isOpen={isViewerOpen} 
         onClose={() => setIsViewerOpen(false)} 
+      />
+
+      <RoomVisualizer
+        artwork={artwork}
+        isOpen={isRoomVisualizerOpen}
+        onClose={() => setIsRoomVisualizerOpen(false)}
       />
     </>
   );
