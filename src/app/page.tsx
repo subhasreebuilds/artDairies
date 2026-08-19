@@ -158,8 +158,8 @@ export default function Home() {
               modules={[EffectCoverflow, Navigation, Pagination, Autoplay]}
               className="w-full !pt-8 !pb-16"
             >
-              {[...featuredWorks, ...featuredWorks, ...featuredWorks, ...featuredWorks].map((artwork, index) => (
-                <SwiperSlide key={`${artwork.id}-loop-${index}`} className="!w-[260px] md:!w-[330px] lg:!w-[420px]">
+              {artworks.map((artwork, index) => (
+                <SwiperSlide key={artwork.id} className="!w-[260px] md:!w-[330px] lg:!w-[420px]">
                   <Link href={`/gallery/${artwork.id}`} className="flex flex-col items-center w-full">
                     <div className="relative w-full aspect-[4/5] shadow-2xl rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(200,96,90,0.35)] hover:ring-2 hover:ring-accent-gold/40">
                       <Image src={artwork.image} alt={artwork.title} fill className="object-cover transform hover:scale-105 transition-transform duration-[1.5s] ease-out" />
