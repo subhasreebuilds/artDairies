@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Camera, Mail, ArrowRight } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
+import { InstagramIcon } from "@/components/icons/Instagram";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +58,7 @@ export default function ContactPage() {
                     className="flex items-center gap-6 text-ink-800 hover:text-ink-900 transition-colors font-light group"
                   >
                     <span className="bg-earth-100 p-4 rounded-full group-hover:bg-accent-gold/20 transition-colors">
-                      <Camera className="w-5 h-5 text-ink-900" />
+                      <InstagramIcon className="w-5 h-5 text-ink-900" />
                     </span>
                     <span className="tracking-wide">@art_.diaries._</span>
                   </a>

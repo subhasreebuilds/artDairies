@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Camera } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { InstagramIcon } from "@/components/icons/Instagram";
 import { motion, AnimatePresence } from "framer-motion";
 
 const links = [
@@ -30,8 +31,8 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-700 ease-out ${
-          scrolled ? "bg-ivory/90 backdrop-blur-md border-b border-ink-900/5 py-4" : "bg-transparent py-8"
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ease-out bg-[#F8F5F2]/90 backdrop-blur-md border-b border-ink-900/5 ${
+          scrolled ? "py-4 shadow-sm" : "py-6"
         }`}
       >
         <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex items-center justify-between">
@@ -60,7 +61,7 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className="text-ink-800/50 hover:text-ink-900 transition-colors ml-4"
             >
-              <Camera className="w-4 h-4" />
+              <InstagramIcon className="w-4 h-4" />
             </a>
           </nav>
 
@@ -103,7 +104,7 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className="mt-8 flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-ink-800/60 hover:text-ink-900 transition-colors"
               >
-                <Camera className="w-4 h-4" />
+                <InstagramIcon className="w-4 h-4" />
                 <span>Instagram</span>
               </a>
             </nav>

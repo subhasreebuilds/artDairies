@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Camera, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { InstagramIcon } from "@/components/icons/Instagram";
 
 export default function Footer() {
   return (
@@ -47,7 +48,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="flex items-center gap-4 hover:text-white transition-colors"
             >
-              <Camera className="w-4 h-4 text-white/40" />
+              <InstagramIcon className="w-4 h-4 text-white/40" />
               <span>@art_.diaries._</span>
             </a>
             <Link

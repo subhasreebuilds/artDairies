@@ -15,16 +15,22 @@ export default function Home() {
   const featuredWorks = artworks.filter(a => a.featured).slice(0, 4);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full bg-transparent relative overflow-hidden">
+      {/* Ambient background glows for hero */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[5%] right-[5%] w-[45vw] h-[45vw] rounded-full bg-cream/40 blur-[140px]" />
+        <div className="absolute top-[25%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-accent-gold/5 blur-[160px]" />
+      </div>
+
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] pt-32 pb-24 px-6 md:px-12 lg:px-24 flex items-center overflow-hidden border-b border-ink-900/10">
+      <section className="relative min-h-[90vh] pt-32 pb-24 px-6 md:px-12 lg:px-24 flex items-center overflow-hidden border-b border-ink-900/10 bg-transparent">
         <div className="max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
           
           {/* LEFT: Statement */}
           <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1 relative z-20">
             <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] text-ink-900 mb-8">
               ART <br />
-              <span className="italic font-light text-ink-800">DIARIES</span>
+              <span className="italic font-light text-accent-gold">DIARIES</span>
             </h1>
             <p className="font-light text-xl tracking-wide max-w-lg mb-12 text-ink-800/80 leading-[1.8]">
               An archive of intricate patterns, devotional art, handmade pieces and quiet details.
@@ -71,7 +77,7 @@ export default function Home() {
       </section>
 
       {/* Featured Works */}
-      <section className="py-24 px-6 md:px-12 bg-ivory">
+      <section className="py-24 px-6 md:px-12 bg-transparent">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-end mb-16">
             <h2 className="font-serif text-3xl md:text-4xl tracking-wider text-ink-900">Featured Works</h2>
@@ -145,7 +151,7 @@ export default function Home() {
       </section>
 
       {/* Philosophy */}
-      <section className="py-32 px-6 bg-earth-100 text-ink-900 text-center relative overflow-hidden">
+      <section className="py-32 px-6 bg-[#FAF0EC]/30 text-ink-900 text-center relative overflow-hidden border-t border-ink-900/10">
         <div className="absolute inset-0 bg-white/20 pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
           <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-6 block font-light">
@@ -161,8 +167,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Bespoke Art Services / Commissions */}
+      <section className="py-32 px-6 md:px-12 bg-transparent border-t border-ink-900/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-4 block font-light">
+              Collaborations & Custom Work
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl tracking-wide text-ink-900">
+              Bespoke Art Commissions
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12">
+            {[
+              {
+                number: "01",
+                title: "Custom Mandalas",
+                desc: "Spiritual, hand-drawn mandalas tailored to your specific space, color preferences, and energy. Created with high-precision dot-art geometry."
+              },
+              {
+                number: "02",
+                title: "Devotional Paintings",
+                desc: "Traditional Odisha art and Pattachitra-inspired depictions of Lord Jagannath, designed to bring sacred heritage and positive energy into modern homes."
+              },
+              {
+                number: "03",
+                title: "Handmade Creations",
+                desc: "Intricate pen-and-ink illustrations, personalized portraits, and custom-made artistic greeting cards crafted with patience and fine detail."
+              }
+            ].map((service) => (
+              <div 
+                key={service.number} 
+                className="group flex flex-col p-8 md:p-10 bg-white/40 backdrop-blur-sm rounded-3xl border border-ink-900/5 hover:border-accent-gold/40 hover:bg-white/80 hover:-translate-y-2 transition-all duration-500 shadow-sm"
+              >
+                <span className="font-serif text-accent-gold text-sm italic mb-6 block">
+                  {service.number} / Service
+                </span>
+                <h3 className="font-serif text-2xl text-ink-900 mb-4 group-hover:text-accent-gold transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <p className="font-light text-ink-800/70 text-sm leading-[1.7] mb-8 flex-1">
+                  {service.desc}
+                </p>
+                <Link 
+                  href="/contact" 
+                  className="inline-flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-ink-900 font-semibold group-hover:text-accent-gold transition-colors"
+                >
+                  Inquire Now <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform text-accent-gold" />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Collections */}
-      <section className="py-32 px-6 md:px-12 bg-ivory text-center">
+      <section className="py-32 px-6 md:px-12 bg-transparent text-center border-t border-ink-900/10">
         <div className="max-w-7xl mx-auto">
           <span className="text-accent-gold text-xs tracking-[0.2em] uppercase mb-4 block font-light">
             Portfolios
