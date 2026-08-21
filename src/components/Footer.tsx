@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { InstagramIcon } from "@/components/icons/Instagram";
+import { useInstagram } from "@/context/InstagramContext";
 
 export default function Footer() {
+  const { instaId } = useInstagram();
+
   return (
     <footer className="bg-ink-900 text-ivory py-16 px-6 md:px-12 mt-auto">
       <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24">
@@ -40,20 +45,21 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="text-[10px] tracking-[0.2em] uppercase mb-8 text-white/40">Connect</h4>
+          <h4 className="text-[10px] tracking-[0.2em] uppercase mb-8 text-white/40">Connect & Instagram Feed</h4>
           <div className="flex flex-col space-y-4 font-light text-sm text-white/80">
             <a
-              href="https://instagram.com/art_.diaries._"
+              href={`https://instagram.com/${instaId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 hover:text-white transition-colors"
+              className="flex items-center gap-3 hover:text-white transition-colors"
             >
-              <InstagramIcon className="w-4 h-4 text-white/40" />
-              <span>@art_.diaries._</span>
+              <InstagramIcon className="w-4 h-4 text-accent-gold" />
+              <span>@{instaId}</span>
             </a>
+
             <Link
               href="/contact"
-              className="flex items-center gap-4 hover:text-white transition-colors"
+              className="flex items-center gap-3 hover:text-white transition-colors"
             >
               <Mail className="w-4 h-4 text-white/40" />
               <span>Get in Touch</span>

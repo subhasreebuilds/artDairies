@@ -1,37 +1,41 @@
+"use client";
+
 import Image from "next/image";
-import { artworks } from "@/data/artworks";
+import { useInstagram } from "@/context/InstagramContext";
 
 export default function ProcessPage() {
+  const { combinedArtworks } = useInstagram();
+
   const processSteps = [
     {
       id: "01",
       title: "Inspiration",
       description: "Every piece begins with an observation—a traditional motif, a moment of stillness, or a cultural story. I spend time researching and meditating on the subject before any physical work begins.",
-      image: artworks[1]?.image || "/artworks/placeholder.png"
+      image: combinedArtworks[1]?.image || combinedArtworks[0]?.image || ""
     },
     {
       id: "02",
       title: "Initial Sketch",
       description: "The foundation is laid lightly with pencil. For mandalas and geometric pieces, this stage requires precise mathematical division of the canvas to ensure perfect symmetry.",
-      image: artworks[3]?.image || "/artworks/placeholder.png"
+      image: combinedArtworks[3]?.image || combinedArtworks[0]?.image || ""
     },
     {
       id: "03",
       title: "Pattern & Detailing",
       description: "The core of my work lies in the intricate details. Using fine liners or fine brushes, I build up layers of patterns, breathing life into the initial structure.",
-      image: artworks[8]?.image || "/artworks/placeholder.png"
+      image: combinedArtworks[8]?.image || combinedArtworks[2]?.image || ""
     },
     {
       id: "04",
       title: "Color / Dot Work",
       description: "Whether it's the vibrant acrylics of an Odisha-inspired piece or the meticulous application of thousands of dots for a mandala, color is added with immense patience.",
-      image: artworks[4]?.image || "/artworks/placeholder.png"
+      image: combinedArtworks[4]?.image || combinedArtworks[1]?.image || ""
     },
     {
       id: "05",
       title: "Final Artwork",
       description: "The finished piece is sealed to protect its vibrancy. What was once a blank canvas is now a tangible entry in the Art Diaries—ready to be shared with the world.",
-      image: artworks[0]?.image || "/artworks/placeholder.png"
+      image: combinedArtworks[0]?.image || ""
     }
   ];
 
@@ -62,12 +66,14 @@ export default function ProcessPage() {
               <div className="w-full lg:w-1/2 relative group p-4 sm:p-8 md:p-12">
                 <div className="relative w-full aspect-square bg-white/40 backdrop-blur-sm shadow-xl rounded-3xl border border-ink-900/5 overflow-hidden flex items-center justify-center p-4 sm:p-8 transition-all duration-500 hover:shadow-[0_25px_50px_-12px_rgba(200,96,90,0.15)]">
                   <div className="absolute inset-0 bg-ink-900/0 group-hover:bg-ink-900/5 transition-colors duration-700 z-10" />
-                  <Image 
-                    src={step.image} 
-                    alt={step.title}
-                    fill
-                    className="object-contain p-4 sm:p-8 drop-shadow-xl transform group-hover:scale-[1.02] transition-transform duration-[1.5s]"
-                  />
+                  {step.image ? (
+                    <Image 
+                      src={step.image} 
+                      alt={step.title}
+                      fill
+                      className="object-cover rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-[1.5s]"
+                    />
+                  ) : null}
                 </div>
                 {/* Decorative Step Number */}
                 <div className="absolute -top-4 -left-4 sm:-top-8 sm:-left-8 md:-top-12 md:-left-12 text-[5rem] sm:text-[8rem] md:text-[12rem] font-serif text-ink-900/5 select-none pointer-events-none z-0">

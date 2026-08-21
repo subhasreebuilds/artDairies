@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Providers from "@/components/Providers";
 
 const dmSans = DM_Sans({
   variable: "--font-inter",
@@ -39,12 +40,15 @@ export default function RootLayout({
         className={`${dmSans.variable} ${cormorant.variable} ${greatVibes.variable} font-sans min-h-screen bg-background text-foreground antialiased flex flex-col`}
         suppressHydrationWarning
       >
-        <Navbar />
-        <main className="flex-grow pt-24">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-grow pt-24">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
 }
+
