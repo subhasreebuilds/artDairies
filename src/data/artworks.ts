@@ -20,11 +20,11 @@ export interface Artwork {
 }
 
 export const CATEGORY_PRICES: Record<ArtworkCategory, string> = {
-  "ODISHA & JAGANNATH": "₹1,299",
-  "MANDALA": "₹1,399",
-  "PEN & INK": "₹799",
+  "ODISHA & JAGANNATH": "₹1,099",
+  "MANDALA": "₹1,199",
+  "PEN & INK": "₹999",
   "HANDMADE": "₹1,099",
-  "DECORATIVE": "₹1,199"
+  "DECORATIVE": "₹799"
 };
 
 // 12 REAL INSTAGRAM WORKS FROM @art_.diaries._ (Ordered by Visual Grid Position 1 to 12)
@@ -39,7 +39,7 @@ export const artworks: Artwork[] = [
     description: "Not perfect. Just devotion.",
     medium: "Handmade Artwork",
     year: "2024",
-    price: "₹1,299",
+    price: "₹1,099",
     featured: true,
     orientation: "square",
   },
@@ -53,7 +53,7 @@ export const artworks: Artwork[] = [
     description: "💫 Celestial flow",
     medium: "Fine Liner on Paper",
     year: "2024",
-    price: "₹799",
+    price: "₹999",
     featured: true,
     orientation: "portrait",
   },
@@ -67,7 +67,7 @@ export const artworks: Artwork[] = [
     description: "🖇️ Handcrafted creation",
     medium: "Handmade Craft",
     year: "2024",
-    price: "₹799",
+    price: "₹999",
     orientation: "portrait",
   },
   // Position 4: Circular Jagannath Mandala held in hand (ODISHA & JAGANNATH, MANDALA)
@@ -80,7 +80,7 @@ export const artworks: Artwork[] = [
     description: "⭕❗⭕ Sacred mandala geometry",
     medium: "Dot Art",
     year: "2024",
-    price: "₹1,299",
+    price: "₹1,099",
     orientation: "square",
   },
   // Position 5: Handcrafted Painted Cups with Shells (HANDMADE)
@@ -107,7 +107,7 @@ export const artworks: Artwork[] = [
     description: "✨ Radiant art",
     medium: "Acrylic on Canvas",
     year: "2024",
-    price: "₹1,199",
+    price: "₹799",
     featured: true,
     orientation: "square",
   },
@@ -121,7 +121,7 @@ export const artworks: Artwork[] = [
     description: "⭕❗⭕ Geometric dot mandala",
     medium: "Acrylic Dot Art",
     year: "2024",
-    price: "₹1,299",
+    price: "₹1,099",
     orientation: "square",
   },
   // Position 8: Blue Lord Shiva Art Plate (DECORATIVE, MANDALA)
@@ -134,7 +134,7 @@ export const artworks: Artwork[] = [
     description: "❤️ Handmade with passion",
     medium: "Mixed Media",
     year: "2024",
-    price: "₹1,199",
+    price: "₹799",
     orientation: "square",
   },
   // Position 9: Black/Gold Circular Plate held up (DECORATIVE, MANDALA)
@@ -147,7 +147,7 @@ export const artworks: Artwork[] = [
     description: "✨ Divine details",
     medium: "Acrylic & Ink",
     year: "2024",
-    price: "₹1,199",
+    price: "₹799",
     featured: true,
     orientation: "square",
   },
@@ -161,7 +161,7 @@ export const artworks: Artwork[] = [
     description: "🪈🙏 Divine melody and devotion",
     medium: "Acrylic & Pen",
     year: "2024",
-    price: "₹799",
+    price: "₹999",
     featured: true,
     orientation: "square",
   },
@@ -175,7 +175,7 @@ export const artworks: Artwork[] = [
     description: "✨ Precision linework",
     medium: "Pen & Ink",
     year: "2024",
-    price: "₹1,199",
+    price: "₹799",
     orientation: "portrait",
   },
   // Position 12: Small Blue Dot Mandala Coaster held in hand (DECORATIVE, MANDALA)
@@ -188,7 +188,7 @@ export const artworks: Artwork[] = [
     description: "Started with vision, ended in confusion 😞",
     medium: "Original Instagram Artwork",
     year: "2024",
-    price: "₹1,199",
+    price: "₹799",
     orientation: "square",
   }
 ];
