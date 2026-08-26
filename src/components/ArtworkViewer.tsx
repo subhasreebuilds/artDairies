@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Info, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
 import { Artwork } from "@/data/artworks";
+import PurchaseModal from "@/components/PurchaseModal";
 
 interface ArtworkViewerProps {
   artwork: Artwork;
@@ -35,6 +36,7 @@ const ZoomControls = () => {
 
 export default function ArtworkViewer({ artwork, prevArtwork, nextArtwork, isOpen, onClose }: ArtworkViewerProps) {
   const [showInfo, setShowInfo] = useState(true);
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
 
   // Handle escape key
   useEffect(() => {
@@ -116,13 +118,14 @@ export default function ArtworkViewer({ artwork, prevArtwork, nextArtwork, isOpe
                 <p className="font-light text-sm leading-[1.8] text-white/80 mb-6">
                   {artwork.description}
                 </p>
-                <Link 
-                  href="/contact"
-                  className="inline-block text-xs uppercase tracking-[0.2em] border-b border-accent-gold text-accent-gold hover:text-white hover:border-white transition-colors pb-1"
-                  onClick={onClose}
+
+                <button 
+                  onClick={() => setIsPurchaseOpen(true)}
+                  className="w-full bg-accent-gold text-white hover:bg-white hover:text-ink-900 transition-colors py-3.5 px-4 rounded-2xl text-xs uppercase tracking-[0.2em] font-semibold flex items-center justify-center gap-2 shadow-xl"
                 >
-                  Inquire About This Piece
-                </Link>
+                  <ShoppingBag className="w-4 h-4" />
+                  Buy Now / Inquire
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -170,9 +173,19 @@ export default function ArtworkViewer({ artwork, prevArtwork, nextArtwork, isOpe
                   <span className="text-[9px] tracking-widest text-white/50 uppercase">{artwork.year}</span>
                 </div>
                 <h2 className="font-serif text-xl sm:text-2xl mb-2 text-white font-normal leading-tight">{artwork.title}</h2>
-                <p className="font-light text-xs sm:text-sm leading-relaxed text-white/80 line-clamp-3">
+                <p className="font-light text-xs sm:text-sm leading-relaxed text-white/80 line-clamp-3 mb-3">
                   {artwork.description}
                 </p>
+
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                  <button
+                    onClick={() => setIsPurchaseOpen(true)}
+                    className="w-full bg-accent-gold text-white py-2.5 px-4 rounded-xl text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 shadow-md"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    Buy Now / Check Availability
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -202,6 +215,13 @@ export default function ArtworkViewer({ artwork, prevArtwork, nextArtwork, isOpe
               <ZoomControls />
             </TransformWrapper>
           </div>
+
+          {/* Purchase Modal in Viewer */}
+          <PurchaseModal
+            artwork={artwork}
+            isOpen={isPurchaseOpen}
+            onClose={() => setIsPurchaseOpen(false)}
+          />
 
         </motion.div>
       )}

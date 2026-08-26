@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { useInstagram } from "@/context/InstagramContext";
+import { Artwork } from "@/data/artworks";
+import PurchaseModal from "@/components/PurchaseModal";
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
@@ -13,6 +16,7 @@ import 'swiper/css/navigation';
 
 export default function Home() {
   const { combinedArtworks, instaId } = useInstagram();
+  const [selectedPurchaseArtwork, setSelectedPurchaseArtwork] = useState<Artwork | null>(null);
   
   const featuredWorks = combinedArtworks.filter(a => a.featured).slice(0, 8);
   const heroArtwork = featuredWorks[0] || combinedArtworks[0];
@@ -55,14 +59,24 @@ export default function Home() {
               An archive of intricate patterns, devotional art, handmade pieces and quiet details created with love.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-8 relative z-10">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 relative z-10">
               <Link
                 href="/gallery"
-                className="group flex items-center justify-center gap-3 bg-ink-900 text-white text-xs tracking-[0.2em] uppercase px-8 py-4 rounded-full hover:bg-accent-gold transition-colors duration-300 shadow-md"
+                className="group flex items-center justify-center gap-3 bg-ink-900 text-white text-xs tracking-[0.2em] uppercase px-8 py-4 rounded-full hover:bg-accent-gold transition-colors duration-300 shadow-md font-medium"
               >
                 Explore Gallery
                 <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
               </Link>
+              
+              {heroArtwork && (
+                <button
+                  onClick={() => setSelectedPurchaseArtwork(heroArtwork)}
+                  className="flex items-center justify-center gap-2 bg-white/80 backdrop-blur-md text-ink-900 border border-ink-900/15 hover:border-accent-gold hover:text-accent-gold text-xs tracking-[0.2em] uppercase px-7 py-4 rounded-full transition-colors duration-300 shadow-sm font-medium"
+                >
+                  <ShoppingBag className="w-4 h-4 text-accent-gold" />
+                  Buy / Inquire Featured
+                </button>
+              )}
             </div>
 
             {/* Scroll indicator */}
@@ -201,19 +215,19 @@ export default function Home() {
                 title: "Mandalas",
                 category: "MANDALA",
                 desc: "Meditative geometric balance drawn with fine liners and dot work.",
-                img: combinedArtworks.find(a => a.category === "MANDALA")?.image || heroArtwork.image
+                img: combinedArtworks.find(a => a.id === "insta-3704211785722583819")?.image || combinedArtworks.find(a => a.categories?.includes("MANDALA") && a.id !== heroArtwork.id)?.image || combinedArtworks[5]?.image
               },
               {
                 title: "Odisha Heritage",
                 category: "ODISHA & JAGANNATH",
                 desc: "Devotional themes & traditional colors inspired by Odisha culture.",
-                img: combinedArtworks.find(a => a.category === "ODISHA & JAGANNATH")?.image || heroArtwork.image
+                img: combinedArtworks.find(a => a.id === "insta-3933982870994107354")?.image || combinedArtworks[0]?.image
               },
               {
                 title: "Pen & Ink",
                 category: "PEN & INK",
                 desc: "High-contrast monochrome studies focusing on line & symmetry.",
-                img: combinedArtworks.find(a => a.category === "PEN & INK")?.image || heroArtwork.image
+                img: combinedArtworks.find(a => a.id === "insta-3748304991087165783")?.image || combinedArtworks[1]?.image
               }
             ].map((col) => (
               <Link 
@@ -243,6 +257,13 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Direct Buy Modal */}
+      <PurchaseModal
+        artwork={selectedPurchaseArtwork}
+        isOpen={!!selectedPurchaseArtwork}
+        onClose={() => setSelectedPurchaseArtwork(null)}
+      />
     </div>
   );
 }

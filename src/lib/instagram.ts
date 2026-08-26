@@ -1,4 +1,4 @@
-import { ArtworkCategory } from "@/data/artworks";
+import { ArtworkCategory, artworks as staticArtworks, CATEGORY_PRICES } from "@/data/artworks";
 import { InstagramMediaItem, InstagramArtwork } from "@/types/instagram";
 
 // Helper to determine artwork category from caption or hashtags
@@ -54,9 +54,11 @@ export function convertInstagramItemToArtwork(
   item: InstagramMediaItem,
   index: number
 ): InstagramArtwork {
+  const staticMatch = staticArtworks.find(a => a.id === `insta-${item.id}`);
   const caption = item.caption || "";
-  const category = parseInstagramCategory(caption);
-  const title = parseInstagramTitle(caption, item.id);
+  const category = staticMatch?.category || parseInstagramCategory(caption);
+  const categories = staticMatch?.categories || [category];
+  const title = staticMatch?.title || parseInstagramTitle(caption, item.id);
   const medium = parseInstagramMedium(caption);
   
   const year = item.timestamp ? new Date(item.timestamp).getFullYear().toString() : new Date().getFullYear().toString();
@@ -66,10 +68,12 @@ export function convertInstagramItemToArtwork(
     id: `insta-${item.id}`,
     title,
     category,
+    categories,
     image: imageUrl,
     description: caption.length > 150 ? caption.slice(0, 147) + "..." : (caption || "Handcrafted original artwork shared on Instagram."),
     medium,
     year,
+    price: staticMatch?.price || CATEGORY_PRICES[category] || "₹1,199",
     featured: index < 6,
     orientation: index % 3 === 0 ? "portrait" : index % 3 === 1 ? "landscape" : "square",
     isInstagram: true,
@@ -125,6 +129,7 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
   const cleanId = instaId.replace(/^@/, "");
   
   const realInstagramPosts = [
+    // Position 1: Red Jagannath Painting (ODISHA & JAGANNATH)
     {
       id: "3933982870994107354",
       shortcode: "DaYUJP6Ezva",
@@ -137,35 +142,12 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
       comments: 1,
       orientation: "square" as const
     },
-    {
-      id: "3831754309177119487",
-      shortcode: "DUtID4hExL_",
-      title: "Monochrome Harmony",
-      category: "PEN & INK" as ArtworkCategory,
-      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/634211497_17876264391486085_3765906935459845360_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=0jjIkWCSwe0Q7kNvwG0r6WH&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQEP9YDnyhV1fYICjtC9rnNrs9CcmTIRz8sNrI3-xcJClg&oe=6A8DF5C8&_nc_sid=8b3546",
-      caption: "🩶 Handcrafted with love",
-      medium: "Pen & Ink",
-      likes: 33,
-      comments: 4,
-      orientation: "portrait" as const
-    },
-    {
-      id: "3759913521976134505",
-      shortcode: "DQt5W1nk0tp",
-      title: "Spark Of Creativity",
-      category: "DECORATIVE" as ArtworkCategory,
-      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/572132678_17865369684486085_4349771456467844788_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=t3vwRR2riksQ7kNvwHWKb7z&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQHq_L0Vn_86PVNwkMyXf--3PASe1XjS9kv7EchuS4_G1g&oe=6A8DEA38&_nc_sid=8b3546",
-      caption: "✨ Divine details",
-      medium: "Acrylic & Ink",
-      likes: 33,
-      comments: 4,
-      orientation: "square" as const
-    },
+    // Position 2: Black & White Fine Liner Mandala (PEN & INK)
     {
       id: "3748304991087165783",
       shortcode: "DQEp4evkwFX",
       title: "Celestial Flow",
-      category: "DECORATIVE" as ArtworkCategory,
+      category: "PEN & INK" as ArtworkCategory,
       image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/568183508_17863706412486085_3168057369638715392_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=zNWM0NiyynkQ7kNvwGCM-Do&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQGBq0vd97xuySMdVPX5qg8a5XTwD5fftL95D5P1rAYbmQ&oe=6A8DDDA2&_nc_sid=8b3546",
       caption: "💫 Celestial flow",
       medium: "Fine Liner on Paper",
@@ -173,6 +155,46 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
       comments: 0,
       orientation: "portrait" as const
     },
+    // Position 3: Black & White Bird/Line Art (PEN & INK)
+    {
+      id: "3676633705957220665",
+      shortcode: "DMGBuA8zuE5",
+      title: "Intricate Ties",
+      category: "PEN & INK" as ArtworkCategory,
+      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/519504157_17852501514486085_450904647857436159_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=mfxbcoDRF4cQ7kNvwEUU8Bm&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQEasaJgH_XMnC6KVsgkq-tMDp3Vc5qCovGfC4qNVM6tjg&oe=6A8DE8CC&_nc_sid=8b3546",
+      caption: "🖇️ Handcrafted creation",
+      medium: "Handmade Craft",
+      likes: 25,
+      comments: 0,
+      orientation: "portrait" as const
+    },
+    // Position 4: Circular Jagannath Mandala held in hand (ODISHA & JAGANNATH)
+    {
+      id: "3638876963735373852",
+      shortcode: "DJ_41GkzIgc",
+      title: "Circular Harmony",
+      category: "ODISHA & JAGANNATH" as ArtworkCategory,
+      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.2885-15/500544942_17845403193486085_7787974853815278006_n.webp?stp=dst-jpg_e35_p1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=6g0opB0lu_kQ7kNvwHmq38K&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQGL7G60KBXMFFDKNbYc5g75MpgwN7o9j2yhjRFHm3F0Bw&oe=6A8DD168&_nc_sid=8b3546",
+      caption: "⭕❗⭕ Sacred mandala geometry",
+      medium: "Dot Art",
+      likes: 29,
+      comments: 2,
+      orientation: "square" as const
+    },
+    // Position 5: Handcrafted Painted Cups with Shells (HANDMADE)
+    {
+      id: "3831754309177119487",
+      shortcode: "DUtID4hExL_",
+      title: "Monochrome Harmony",
+      category: "HANDMADE" as ArtworkCategory,
+      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/634211497_17876264391486085_3765906935459845360_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=0jjIkWCSwe0Q7kNvwG0r6WH&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQEP9YDnyhV1fYICjtC9rnNrs9CcmTIRz8sNrI3-xcJClg&oe=6A8DF5C8&_nc_sid=8b3546",
+      caption: "🩶 Handcrafted with love",
+      medium: "Pen & Ink",
+      likes: 33,
+      comments: 4,
+      orientation: "portrait" as const
+    },
+    // Position 6: Colorful Dot Mandala Plate held in front of face (DECORATIVE)
     {
       id: "3704211785722583819",
       shortcode: "DNoAP5Mz1sL",
@@ -185,35 +207,12 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
       comments: 1,
       orientation: "square" as const
     },
-    {
-      id: "3693306255474754015",
-      shortcode: "DNBQnisTQHf",
-      title: "Divine Flute Devotion",
-      category: "ODISHA & JAGANNATH" as ArtworkCategory,
-      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/529141605_17855245545486085_5926344593230774566_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=VU3kHlC6SIIQ7kNvwFMSzLu&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQENBtQUCCsjW85C0atesYXzfuyFwkLrhVgb3Qma5JyiPg&oe=6A8DDEC2&_nc_sid=8b3546",
-      caption: "🪈🙏 Divine melody and devotion",
-      medium: "Acrylic & Pen",
-      likes: 86,
-      comments: 2,
-      orientation: "square" as const
-    },
-    {
-      id: "3676633705957220665",
-      shortcode: "DMGBuA8zuE5",
-      title: "Intricate Ties",
-      category: "HANDMADE" as ArtworkCategory,
-      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/519504157_17852501514486085_450904647857436159_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=mfxbcoDRF4cQ7kNvwEUU8Bm&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQEasaJgH_XMnC6KVsgkq-tMDp3Vc5qCovGfC4qNVM6tjg&oe=6A8DE8CC&_nc_sid=8b3546",
-      caption: "🖇️ Handcrafted creation",
-      medium: "Handmade Craft",
-      likes: 25,
-      comments: 0,
-      orientation: "portrait" as const
-    },
+    // Position 7: Jagannath Dot Mandala Plate on Reflection Surface (ODISHA & JAGANNATH)
     {
       id: "3651195655798178525",
       shortcode: "DKrpxqlTMLd",
       title: "Sacred Dot Mandala",
-      category: "MANDALA" as ArtworkCategory,
+      category: "ODISHA & JAGANNATH" as ArtworkCategory,
       image: "https://scontent-bom2-3.cdninstagram.com/v/t51.2885-15/505361942_17848164159486085_6474861037744688142_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=4HSPDY2OXQMQ7kNvwHHFrCm&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQFXwB4ZMfTDkOS2ul5EVqAlxtUGvuNVDg0I2p-DvWAztw&oe=6A8DFEE0&_nc_sid=8b3546",
       caption: "⭕❗⭕ Geometric dot mandala",
       medium: "Acrylic Dot Art",
@@ -221,30 +220,7 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
       comments: 2,
       orientation: "square" as const
     },
-    {
-      id: "3645371023996400890",
-      shortcode: "DKW9aHfzrT6",
-      title: "Light & Symmetry",
-      category: "MANDALA" as ArtworkCategory,
-      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.2885-15/502755340_17847070428486085_68428017478557191_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=WtS4pJmL0hUQ7kNvwFjyj2b&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQGYVw8OSIoyMrYi0bxpxDO9nTXnOEwgWLOOSnSVWWNqRQ&oe=6A8DD819&_nc_sid=8b3546",
-      caption: "✨ Precision linework",
-      medium: "Pen & Ink",
-      likes: 27,
-      comments: 1,
-      orientation: "portrait" as const
-    },
-    {
-      id: "3638876963735373852",
-      shortcode: "DJ_41GkzIgc",
-      title: "Circular Harmony",
-      category: "MANDALA" as ArtworkCategory,
-      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.2885-15/500544942_17845403193486085_7787974853815278006_n.webp?stp=dst-jpg_e35_p1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=6g0opB0lu_kQ7kNvwHmq38K&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQGL7G60KBXMFFDKNbYc5g75MpgwN7o9j2yhjRFHm3F0Bw&oe=6A8DD168&_nc_sid=8b3546",
-      caption: "⭕❗⭕ Sacred mandala geometry",
-      medium: "Dot Art",
-      likes: 29,
-      comments: 2,
-      orientation: "square" as const
-    },
+    // Position 8: Blue Lord Shiva Art Plate (DECORATIVE)
     {
       id: "3637263708369943693",
       shortcode: "DJ6KBJbz3yN",
@@ -257,6 +233,46 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
       comments: 0,
       orientation: "square" as const
     },
+    // Position 9: Black/Gold Circular Plate held up (DECORATIVE)
+    {
+      id: "3759913521976134505",
+      shortcode: "DQt5W1nk0tp",
+      title: "Spark Of Creativity",
+      category: "DECORATIVE" as ArtworkCategory,
+      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/572132678_17865369684486085_4349771456467844788_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=t3vwRR2riksQ7kNvwHWKb7z&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQHq_L0Vn_86PVNwkMyXf--3PASe1XjS9kv7EchuS4_G1g&oe=6A8DEA38&_nc_sid=8b3546",
+      caption: "✨ Divine details",
+      medium: "Acrylic & Ink",
+      likes: 33,
+      comments: 4,
+      orientation: "square" as const
+    },
+    // Position 10: Jagannath & Puri Temple Sketch (PEN & INK)
+    {
+      id: "3693306255474754015",
+      shortcode: "DNBQnisTQHf",
+      title: "Divine Flute Devotion",
+      category: "PEN & INK" as ArtworkCategory,
+      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.82787-15/529141605_17855245545486085_5926344593230774566_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=VU3kHlC6SIIQ7kNvwFMSzLu&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQENBtQUCCsjW85C0atesYXzfuyFwkLrhVgb3Qma5JyiPg&oe=6A8DDEC2&_nc_sid=8b3546",
+      caption: "🪈🙏 Divine melody and devotion",
+      medium: "Acrylic & Pen",
+      likes: 86,
+      comments: 2,
+      orientation: "square" as const
+    },
+    // Position 11: Small Yellow/Green Mandala held in hand (DECORATIVE)
+    {
+      id: "3645371023996400890",
+      shortcode: "DKW9aHfzrT6",
+      title: "Light & Symmetry",
+      category: "DECORATIVE" as ArtworkCategory,
+      image: "https://scontent-bom2-3.cdninstagram.com/v/t51.2885-15/502755340_17847070428486085_68428017478557191_n.webp?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_ht=scontent-bom2-3.cdninstagram.com&_nc_cat=101&_nc_oc=Q6cZ2gHnnz4xdHKoTkvneJlQNcNp3oZjrT2pEMYDNYmXcwxkwj2IZxD6vWmqtcGrE92WQ_E&_nc_ohc=WtS4pJmL0hUQ7kNvwFjyj2b&_nc_gid=ke0gu_De2vfZRdNimf--NQ&edm=AOQ1c0wBAAAA&ccb=7-5&oh=00_AQGYVw8OSIoyMrYi0bxpxDO9nTXnOEwgWLOOSnSVWWNqRQ&oe=6A8DD819&_nc_sid=8b3546",
+      caption: "✨ Precision linework",
+      medium: "Pen & Ink",
+      likes: 27,
+      comments: 1,
+      orientation: "portrait" as const
+    },
+    // Position 12: Small Blue Dot Mandala Coaster held in hand (DECORATIVE)
     {
       id: "3636016362550167741",
       shortcode: "DJ1uZ4HT4i9",
@@ -271,22 +287,29 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
     }
   ];
 
-  return realInstagramPosts.map((item) => ({
-    id: `insta-${item.id}`,
-    title: item.title,
-    category: item.category,
-    image: item.image,
-    description: item.caption,
-    medium: item.medium,
-    year: "2024",
-    featured: true,
-    orientation: item.orientation,
-    isInstagram: true,
-    permalink: `https://www.instagram.com/p/${item.shortcode}/`,
-    likeCount: item.likes,
-    commentsCount: item.comments,
-    timestamp: undefined,
-    instagramUsername: cleanId,
-    originalCaption: item.caption
-  }));
+  return realInstagramPosts.map((item) => {
+    const staticMatch = staticArtworks.find(a => a.id === `insta-${item.id}`);
+    const category = staticMatch?.category || item.category;
+    const categories = staticMatch?.categories || [category];
+    return {
+      id: `insta-${item.id}`,
+      title: staticMatch?.title || item.title,
+      category,
+      categories,
+      image: item.image,
+      description: item.caption,
+      medium: item.medium,
+      year: "2024",
+      price: staticMatch?.price || CATEGORY_PRICES[category] || "₹1,199",
+      featured: true,
+      orientation: item.orientation,
+      isInstagram: true,
+      permalink: `https://www.instagram.com/p/${item.shortcode}/`,
+      likeCount: item.likes,
+      commentsCount: item.comments,
+      timestamp: undefined,
+      instagramUsername: cleanId,
+      originalCaption: item.caption
+    };
+  });
 }

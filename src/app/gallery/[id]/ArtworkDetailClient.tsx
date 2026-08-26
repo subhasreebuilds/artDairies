@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, ChevronRight, ArrowRight, Expand } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, ArrowRight, Expand, ShoppingBag, Sparkles } from "lucide-react";
 import { Artwork } from "@/data/artworks";
 import { useInstagram } from "@/context/InstagramContext";
 import { InstagramIcon } from "@/components/icons/Instagram";
 import ArtworkViewer from "@/components/ArtworkViewer";
+import PurchaseModal from "@/components/PurchaseModal";
 
 interface Props {
   artwork: Artwork & {
@@ -26,6 +27,7 @@ interface Props {
 export default function ArtworkDetailClient({ artwork: initialArtwork, prevArtwork: initialPrev, nextArtwork: initialNext, relatedArtworks: initialRelated }: Props) {
   const { combinedArtworks, instaId } = useInstagram();
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
 
   // Find artwork in combined Instagram artworks if exists
   const artwork = combinedArtworks.find(a => a.id === initialArtwork.id) || initialArtwork;
@@ -102,6 +104,10 @@ export default function ArtworkDetailClient({ artwork: initialArtwork, prevArtwo
                     <span className="block text-ink-800/40 mb-1 sm:mb-2">Year</span>
                     {artwork.year}
                   </div>
+                  <div>
+                    <span className="block text-ink-800/40 mb-1 sm:mb-2">Price</span>
+                    <span className="text-accent-gold font-bold">{artwork.price || "₹1,999"}</span>
+                  </div>
                 </div>
 
                 <div className="prose prose-p:font-light prose-p:leading-[1.8] prose-p:text-ink-800/80 max-w-none mb-10 sm:mb-16 text-sm sm:text-base">
@@ -109,23 +115,24 @@ export default function ArtworkDetailClient({ artwork: initialArtwork, prevArtwo
                   <p className="whitespace-pre-line">{artwork.description}</p>
                 </div>
 
-                <div className="mt-auto pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <div className="mt-auto pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                  <button
+                    onClick={() => setIsPurchaseOpen(true)}
+                    className="bg-ink-900 text-white hover:bg-accent-gold px-8 py-4 text-xs uppercase tracking-[0.2em] rounded-full transition-all duration-300 flex items-center justify-center gap-2.5 shadow-xl font-semibold hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <ShoppingBag className="w-4 h-4 text-accent-gold" />
+                    <span>Buy Now / Check Availability</span>
+                  </button>
+
                   <a
                     href={instaPermalink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gradient-to-r from-purple-600 via-rose-500 to-amber-500 text-white px-7 py-3.5 text-xs uppercase tracking-[0.2em] rounded-full hover:opacity-95 transition-opacity duration-300 flex items-center justify-center gap-2 shadow-md font-medium"
+                    className="bg-gradient-to-r from-purple-600 via-rose-500 to-amber-500 text-white px-6 py-4 text-xs uppercase tracking-[0.2em] rounded-full hover:opacity-95 transition-opacity duration-300 flex items-center justify-center gap-2 shadow-md font-medium"
                   >
                     <InstagramIcon className="w-4 h-4" />
-                    View on Instagram
+                    Instagram
                   </a>
-                  <Link 
-                    href={`/contact?artwork=${encodeURIComponent(artwork.title)}`}
-                    className="group inline-flex items-center justify-center gap-3 border-b border-ink-900 pb-2 text-xs uppercase tracking-[0.2em] text-ink-900 hover:text-accent-gold hover:border-accent-gold transition-colors py-2 sm:ml-2"
-                  >
-                    Inquire
-                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                  </Link>
                 </div>
               </div>
             </div>
@@ -197,6 +204,12 @@ export default function ArtworkDetailClient({ artwork: initialArtwork, prevArtwo
         nextArtwork={nextArtwork}
         isOpen={isViewerOpen} 
         onClose={() => setIsViewerOpen(false)} 
+      />
+
+      <PurchaseModal
+        artwork={artwork}
+        isOpen={isPurchaseOpen}
+        onClose={() => setIsPurchaseOpen(false)}
       />
     </>
   );
