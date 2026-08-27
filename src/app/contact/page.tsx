@@ -17,21 +17,63 @@ function ContactForm() {
 
   useEffect(() => {
     if (artworkQuery) {
-      setMessage(`Hi! I would like to inquire about purchasing or commissioning the artwork titled "${artworkQuery}". Please let me know availability and details.`);
       setSubject("artwork");
     }
   }, [artworkQuery]);
+
+  const getDefaultMessageForSubject = () => {
+    if (artworkQuery) {
+      return `Hi! I would like to inquire about purchasing or commissioning the artwork titled "${artworkQuery}". Please let me know availability and details.`;
+    }
+    switch (subject) {
+      case "artwork":
+        return "Hi! I am interested in purchasing an original artwork from Art Diaries. Please share details on available pieces and pricing.";
+      case "commission":
+        return "Hi! I would like to request a custom artwork commission. Please share your availability, process, and sizing options.";
+      case "collab":
+        return "Hi! I would like to discuss a potential collaboration or exhibition opportunity with Art Diaries.";
+      case "general":
+      default:
+        return "Hi! I would like to reach out with a general inquiry about your art collection and creative process.";
+    }
+  };
+
+  const getPlaceholderText = () => {
+    if (artworkQuery) {
+      return `Enter your message note... (Or leave blank to inquire about "${artworkQuery}")`;
+    }
+    switch (subject) {
+      case "artwork":
+        return `Enter your message note... (Or leave blank for default: "Hi! I am interested in purchasing an original artwork...")`;
+      case "commission":
+        return `Enter your message note... (Or leave blank for default: "Hi! I would like to request a custom artwork commission...")`;
+      case "collab":
+        return `Enter your message note... (Or leave blank for default: "Hi! I would like to discuss a potential collaboration...")`;
+      case "general":
+      default:
+        return `Enter your message note... (Or leave blank for default: "Hi! I would like to reach out with a general inquiry...")`;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
     const form = e.currentTarget;
+    const typedMessage = message.trim();
+    const finalMessage = typedMessage || getDefaultMessageForSubject();
+
+    if (!finalMessage) {
+      setError("Please enter a message note.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const data = {
       name: (form.elements.namedItem("name") as HTMLInputElement).value,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       subject: (form.elements.namedItem("subject") as HTMLSelectElement).value,
-      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+      message: finalMessage,
     };
     try {
       const res = await fetch("/api/contact", {
@@ -65,7 +107,10 @@ function ContactForm() {
             Thank you for reaching out. I will get back to you shortly.
           </p>
           <button 
-            onClick={() => setIsSubmitted(false)}
+            onClick={() => {
+              setIsSubmitted(false);
+              setMessage("");
+            }}
             className="mt-8 text-sm uppercase tracking-widest border-b border-ink-900 pb-1 hover:text-accent-gold hover:border-accent-gold transition-colors"
           >
             Send Another Message
@@ -82,7 +127,7 @@ function ContactForm() {
               id="name"
               required
               className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
-              placeholder="Jane Doe"
+              placeholder="Enter your name"
             />
           </div>
           <div>
@@ -94,7 +139,7 @@ function ContactForm() {
               id="email"
               required
               className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
-              placeholder="jane@example.com"
+              placeholder="Enter your email"
             />
           </div>
           <div>
@@ -114,17 +159,18 @@ function ContactForm() {
             </select>
           </div>
           <div>
-            <label htmlFor="message" className="block text-xs uppercase tracking-widest mb-2 font-medium">
-              Message
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="message" className="block text-xs uppercase tracking-widest font-medium">
+                Message Note (Optional)
+              </label>
+            </div>
             <textarea
               id="message"
-              required
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30 resize-none"
-              placeholder="Tell me about your inquiry..."
+              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/40 resize-none"
+              placeholder={getPlaceholderText()}
             ></textarea>
           </div>
           

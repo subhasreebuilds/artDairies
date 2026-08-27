@@ -28,18 +28,14 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  // Auto populate message when artwork changes or intent changes
+  // Reset form fields when modal opens or artwork changes
   useEffect(() => {
-    if (artwork) {
-      if (userIntent === "buy") {
-        setMessage(`Hi! I want to buy the original artwork titled "${artwork.title}" (${artwork.medium}). Please share the availability, price, and shipping options.`);
-      } else if (userIntent === "availability") {
-        setMessage(`Hi! I'm interested in "${artwork.title}". Could you please confirm if this piece is available or if a prints/recreation is possible?`);
-      } else {
-        setMessage(`Hi! I love "${artwork.title}" and would like to request a custom size or commission based on this style.`);
-      }
+    if (isOpen) {
+      setMessage("");
+      setIsSubmitted(false);
+      setError("");
     }
-  }, [artwork, userIntent]);
+  }, [isOpen, artwork]);
 
   // Handle escape key
   useEffect(() => {
@@ -58,10 +54,34 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
 
   if (!artwork) return null;
 
+  const getDefaultMessageNote = () => {
+    if (!artwork) return "";
+    if (userIntent === "buy") {
+      return `Hi! I want to buy the original artwork titled "${artwork.title}" (${artwork.medium}). Please share the availability, price, and shipping options.`;
+    } else if (userIntent === "availability") {
+      return `Hi! I'm interested in "${artwork.title}". Could you please confirm if this piece is available or if a prints/recreation is possible?`;
+    } else {
+      return `Hi! I love "${artwork.title}" and would like to request a custom size or commission based on this style.`;
+    }
+  };
+
+  const getPlaceholderText = () => {
+    if (!artwork) return "Enter your message note...";
+    if (userIntent === "buy") {
+      return `Enter your message note... (Or leave blank to send default: "Hi! I want to buy '${artwork.title}'...")`;
+    } else if (userIntent === "availability") {
+      return `Enter your message note... (Or leave blank to check availability for "${artwork.title}")`;
+    } else {
+      return `Enter your message note... (Or leave blank to request custom commission for "${artwork.title}")`;
+    }
+  };
+
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
+
+    const noteToSend = message.trim() || getDefaultMessageNote();
 
     try {
       const res = await fetch("/api/contact", {
@@ -72,7 +92,7 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
           email,
           phone,
           subject: `[BUY INQUIRY] "${artwork.title}" (${userIntent.toUpperCase()})`,
-          message: `${message}\n\n--- Artwork Details ---\nTitle: ${artwork.title}\nCategory: ${artwork.category}\nMedium: ${artwork.medium}\nPhone/WhatsApp: ${phone || "Not provided"}`,
+          message: `${noteToSend}\n\n--- Artwork Details ---\nTitle: ${artwork.title}\nCategory: ${artwork.category}\nMedium: ${artwork.medium}\nPhone/WhatsApp: ${phone || "Not provided"}`,
         }),
       });
 
@@ -268,7 +288,7 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Your full name"
+                            placeholder="Enter your name"
                             className="w-full bg-white border border-ink-900/15 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900 transition-colors"
                           />
                         </div>
@@ -281,7 +301,7 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="email@example.com"
+                            placeholder="Enter your email"
                             className="w-full bg-white border border-ink-900/15 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900 transition-colors"
                           />
                         </div>
@@ -295,20 +315,23 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="+91 Mobile or WhatsApp"
+                          placeholder="Enter your phone or WhatsApp number"
                           className="w-full bg-white border border-ink-900/15 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-ink-900 transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-ink-800/70 mb-1 font-medium">
-                          Message Note
-                        </label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-[10px] uppercase tracking-widest text-ink-800/70 font-medium">
+                            Message Note (Optional)
+                          </label>
+                        </div>
                         <textarea
                           rows={3}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
-                          className="w-full bg-white border border-ink-900/15 rounded-xl p-3 text-xs focus:outline-none focus:border-ink-900 transition-colors resize-none leading-relaxed"
+                          placeholder={getPlaceholderText()}
+                          className="w-full bg-white border border-ink-900/15 rounded-xl p-3 text-xs focus:outline-none focus:border-ink-900 transition-colors resize-none leading-relaxed placeholder:text-ink-900/40 placeholder:font-light"
                         />
                       </div>
 
