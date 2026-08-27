@@ -8,6 +8,7 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import { Artwork } from "@/data/artworks";
 import { InstagramIcon } from "@/components/icons/Instagram";
 import { useInstagram } from "@/context/InstagramContext";
+import { validateEmailFormat } from "../lib/emailValidation";
 
 interface PurchaseModalProps {
   artwork: Artwork | null;

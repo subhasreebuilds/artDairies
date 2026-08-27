@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Mail, ArrowRight } from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { InstagramIcon } from "@/components/icons/Instagram";
+import { validateEmailFormat } from "../../lib/emailValidation";
 
 const getTurnstileSiteKey = () => {
   if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
@@ -17,6 +18,9 @@ function ContactForm() {
   const searchParams = useSearchParams();
   const artworkQuery = searchParams.get("artwork");
   
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -29,6 +33,16 @@ function ContactForm() {
       setSubject("artwork");
     }
   }, [artworkQuery]);
+
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    if (val.trim()) {
+      const res = validateEmailFormat(val);
+      setEmailError(res.isValid ? "" : (res.error || ""));
+    } else {
+      setEmailError("");
+    }
+  };
 
   const getDefaultMessageForSubject = () => {
     if (artworkQuery) {
@@ -69,13 +83,20 @@ function ContactForm() {
     setIsSubmitting(true);
     setError("");
 
+    const emailCheck = validateEmailFormat(email);
+    if (!emailCheck.isValid) {
+      setEmailError(emailCheck.error || "Please enter a valid email address.");
+      setError(emailCheck.error || "Please enter a valid email address.");
+      setIsSubmitting(false);
+      return;
+    }
+
     if (!turnstileToken) {
       setError("Please complete the Cloudflare bot protection check.");
       setIsSubmitting(false);
       return;
     }
 
-    const form = e.currentTarget;
     const typedMessage = message.trim();
     const finalMessage = typedMessage || getDefaultMessageForSubject();
 
@@ -86,9 +107,9 @@ function ContactForm() {
     }
 
     const data = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      subject: (form.elements.namedItem("subject") as HTMLSelectElement).value,
+      name: name.trim(),
+      email: email.trim(),
+      subject,
       message: finalMessage,
       token: turnstileToken,
     };
@@ -99,7 +120,7 @@ function ContactForm() {
         body: JSON.stringify(data),
       });
       const responseData = await res.json();
-      if (!res.ok) throw new Error(responseData.error || "Failed");
+      if (!res.ok) throw new Error(responseData.error || "Failed to send message.");
       setIsSubmitted(true);
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again or email us directly.");
@@ -127,6 +148,9 @@ function ContactForm() {
           <button 
             onClick={() => {
               setIsSubmitted(false);
+              setName("");
+              setEmail("");
+              setEmailError("");
               setMessage("");
               setTurnstileToken("");
             }}
@@ -145,6 +169,8 @@ function ContactForm() {
               type="text"
               id="name"
               required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
               placeholder="Enter your name"
             />
@@ -157,9 +183,16 @@ function ContactForm() {
               type="email"
               id="email"
               required
-              className="w-full bg-transparent border-b border-ink-900/20 py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30"
-              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => handleEmailChange(e.target.value)}
+              className={`w-full bg-transparent border-b ${
+                emailError ? "border-red-500 text-red-900" : "border-ink-900/20"
+              } py-3 focus:outline-none focus:border-ink-900 transition-colors font-light placeholder:text-ink-900/30`}
+              placeholder="Enter your email (e.g. name@gmail.com)"
             />
+            {emailError && (
+              <p className="text-red-500 text-xs mt-1 font-light">{emailError}</p>
+            )}
           </div>
           <div>
             <label htmlFor="subject" className="block text-xs uppercase tracking-widest mb-2 font-medium">
