@@ -6,7 +6,12 @@ import { Mail, ArrowRight } from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { InstagramIcon } from "@/components/icons/Instagram";
 
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
+const getTurnstileSiteKey = () => {
+  if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+    return "1x00000000000000000000AA";
+  }
+  return process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAAEdc79xG8VFN4eRW";
+};
 
 function ContactForm() {
   const searchParams = useSearchParams();
@@ -191,7 +196,7 @@ function ContactForm() {
           {/* Cloudflare Turnstile Bot Protection */}
           <div className="py-2 flex justify-center">
             <Turnstile
-              siteKey={TURNSTILE_SITE_KEY}
+              siteKey={getTurnstileSiteKey()}
               onSuccess={(token) => setTurnstileToken(token)}
               onExpire={() => setTurnstileToken("")}
               onError={() => setTurnstileToken("")}
