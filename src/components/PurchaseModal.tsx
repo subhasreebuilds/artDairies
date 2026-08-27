@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { X, Mail, Send, CheckCircle2, ShieldCheck, Sparkles, PackageCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Artwork } from "@/data/artworks";
 import { InstagramIcon } from "@/components/icons/Instagram";
 import { useInstagram } from "@/context/InstagramContext";
@@ -13,6 +14,8 @@ interface PurchaseModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
 
 export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) {
   const { instaId } = useInstagram();
@@ -24,6 +27,7 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
   const [phone, setPhone] = useState("");
   const [userIntent, setUserIntent] = useState<"buy" | "availability" | "custom">("buy");
   const [message, setMessage] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
@@ -34,6 +38,7 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
       setMessage("");
       setIsSubmitted(false);
       setError("");
+      setTurnstileToken("");
     }
   }, [isOpen, artwork]);
 
@@ -81,6 +86,12 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
     setIsSubmitting(true);
     setError("");
 
+    if (!turnstileToken) {
+      setError("Please complete the Cloudflare bot protection check.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const noteToSend = message.trim() || getDefaultMessageNote();
 
     try {
@@ -91,16 +102,19 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
           name,
           email,
           phone,
+          token: turnstileToken,
           subject: `[BUY INQUIRY] "${artwork.title}" (${userIntent.toUpperCase()})`,
           message: `${noteToSend}\n\n--- Artwork Details ---\nTitle: ${artwork.title}\nCategory: ${artwork.category}\nMedium: ${artwork.medium}\nPhone/WhatsApp: ${phone || "Not provided"}`,
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to send purchase inquiry.");
+      const responseData = await res.json();
+
+      if (!res.ok) throw new Error(responseData.error || "Failed to send purchase inquiry.");
 
       setIsSubmitted(true);
-    } catch {
-      setError("Failed to send message. Please try Instagram DM or email directly.");
+    } catch (err: any) {
+      setError(err.message || "Failed to send message. Please try Instagram DM or email directly.");
     } finally {
       setIsSubmitting(false);
     }
@@ -335,7 +349,18 @@ export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModa
                         />
                       </div>
 
-                      {error && <p className="text-red-500 text-[11px] font-light">{error}</p>}
+                      {/* Cloudflare Turnstile Bot Protection */}
+                      <div className="py-1 flex justify-center scale-90 sm:scale-100 origin-center">
+                        <Turnstile
+                          siteKey={TURNSTILE_SITE_KEY}
+                          onSuccess={(token) => setTurnstileToken(token)}
+                          onExpire={() => setTurnstileToken("")}
+                          onError={() => setTurnstileToken("")}
+                          options={{ theme: "light", size: "normal" }}
+                        />
+                      </div>
+
+                      {error && <p className="text-red-500 text-[11px] font-light text-center">{error}</p>}
 
                       <button
                         type="submit"

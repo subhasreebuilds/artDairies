@@ -1,11 +1,122 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import dns from "dns";
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const TURNSTILE_SECRET_KEY = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || "1x000000000000000000000000000000AA";
+
+function isValidName(name: string): boolean {
+  const trimmed = name.trim();
+  if (trimmed.length < 2) return false;
+  // Reject repeating characters (e.g. "aaaa", "zzzz")
+  if (/^(.)\1+$/i.test(trimmed)) return false;
+  // Reject keyboard mashing without vowels (e.g. "wdwd", "zxcv")
+  if (/^[bcdfghjklmnpqrstvwxyz]{4,}$/i.test(trimmed)) return false;
+  return true;
+}
+
+function isValidEmailUsername(email: string): boolean {
+  const user = email.split("@")[0]?.trim();
+  if (!user || user.length < 2) return false;
+  // Reject repeating characters (e.g. "aaaaa")
+  if (/^(.)\1+$/i.test(user)) return false;
+  // Reject keyboard mashing without vowels (e.g. "wdxqd", "qwrtp")
+  if (/^[bcdfghjklmnpqrstvwxyz]{5,}$/i.test(user)) return false;
+  return true;
+}
+
+// Validate domain MX records to ensure the email can actually receive messages
+async function isValidEmailDomain(email: string): Promise<boolean> {
+  try {
+    const domain = email.split("@")[1]?.trim();
+    if (!domain || domain.length < 4) return false;
+
+    // Block common disposable / spam email domains
+    const disposableDomains = [
+      "tempmail.com", "mailinator.com", "10minutemail.com", 
+      "dispostable.com", "yopmail.com", "trashmail.com", "guerrillamail.com", "ijkj.com"
+    ];
+    if (disposableDomains.includes(domain.toLowerCase())) {
+      return false;
+    }
+
+    const mxRecords = await dns.promises.resolveMx(domain);
+    if (!mxRecords || mxRecords.length === 0) return false;
+
+    // Check if MX exchange points to loopback / localhost / invalid IP addresses
+    const invalidExchanges = ["0.0.0.0", "127.0.0.1", "localhost"];
+    const hasValidMx = mxRecords.some(rec => !invalidExchanges.includes(rec.exchange.toLowerCase()));
+    return hasValidMx;
+  } catch {
+    // DNS resolution failed or domain has no MX records
+    return false;
+  }
+}
 
 export async function POST(req: NextRequest) {
-  const { name, email, subject, message } = await req.json();
+  const { name, email, subject, message, token } = await req.json();
 
   if (!name || !email || !message) {
     return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+  }
+
+  // 1. Strict Name Validation (Reject keyboard mash like "wdwd")
+  if (!isValidName(name)) {
+    return NextResponse.json(
+      { error: "Please enter a valid full name." },
+      { status: 400 }
+    );
+  }
+
+  // 2. Strict Email Format & Username Validation
+  const trimmedEmail = email.trim();
+  if (!EMAIL_REGEX.test(trimmedEmail) || !isValidEmailUsername(trimmedEmail)) {
+    return NextResponse.json(
+      { error: "Please enter a valid email address." },
+      { status: 400 }
+    );
+  }
+
+  // 2. DNS MX Record Validation (Domain check)
+  const isDomainValid = await isValidEmailDomain(trimmedEmail);
+  if (!isDomainValid) {
+    const domain = trimmedEmail.split("@")[1] || "provided";
+    return NextResponse.json(
+      { error: `The email domain '${domain}' appears to be invalid or non-existent. Please enter a real email address.` },
+      { status: 400 }
+    );
+  }
+
+  // 3. Cloudflare Turnstile Bot Protection Verification
+  if (!token) {
+    return NextResponse.json(
+      { error: "Cloudflare bot protection challenge missing. Please complete verification." },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const turnstileRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        secret: TURNSTILE_SECRET_KEY,
+        response: token,
+      }),
+    });
+
+    const turnstileResult = await turnstileRes.json();
+
+    if (!turnstileResult.success && TURNSTILE_SECRET_KEY !== "1x000000000000000000000000000000AA") {
+      return NextResponse.json(
+        { error: "Cloudflare bot protection check failed. Automated requests are blocked." },
+        { status: 403 }
+      );
+    }
+  } catch (err) {
+    console.error("Turnstile verification error:", err);
   }
 
   const transporter = nodemailer.createTransport({

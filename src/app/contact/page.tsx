@@ -3,7 +3,10 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Mail, ArrowRight } from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { InstagramIcon } from "@/components/icons/Instagram";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
 
 function ContactForm() {
   const searchParams = useSearchParams();
@@ -14,6 +17,7 @@ function ContactForm() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState(artworkQuery ? "artwork" : "general");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   useEffect(() => {
     if (artworkQuery) {
@@ -59,6 +63,13 @@ function ContactForm() {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
+
+    if (!turnstileToken) {
+      setError("Please complete the Cloudflare bot protection check.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const form = e.currentTarget;
     const typedMessage = message.trim();
     const finalMessage = typedMessage || getDefaultMessageForSubject();
@@ -74,6 +85,7 @@ function ContactForm() {
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       subject: (form.elements.namedItem("subject") as HTMLSelectElement).value,
       message: finalMessage,
+      token: turnstileToken,
     };
     try {
       const res = await fetch("/api/contact", {
@@ -81,10 +93,11 @@ function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error("Failed");
+      const responseData = await res.json();
+      if (!res.ok) throw new Error(responseData.error || "Failed");
       setIsSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again or email us directly.");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again or email us directly.");
     } finally {
       setIsSubmitting(false);
     }
@@ -110,6 +123,7 @@ function ContactForm() {
             onClick={() => {
               setIsSubmitted(false);
               setMessage("");
+              setTurnstileToken("");
             }}
             className="mt-8 text-sm uppercase tracking-widest border-b border-ink-900 pb-1 hover:text-accent-gold hover:border-accent-gold transition-colors"
           >
@@ -173,11 +187,22 @@ function ContactForm() {
               placeholder={getPlaceholderText()}
             ></textarea>
           </div>
+
+          {/* Cloudflare Turnstile Bot Protection */}
+          <div className="py-2 flex justify-center">
+            <Turnstile
+              siteKey={TURNSTILE_SITE_KEY}
+              onSuccess={(token) => setTurnstileToken(token)}
+              onExpire={() => setTurnstileToken("")}
+              onError={() => setTurnstileToken("")}
+              options={{ theme: "light", size: "normal" }}
+            />
+          </div>
           
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-ink-900 text-white py-4 rounded-full uppercase tracking-widest text-xs font-semibold hover:bg-accent-gold transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-6"
+            className="w-full bg-ink-900 text-white py-4 rounded-full uppercase tracking-widest text-xs font-semibold hover:bg-accent-gold transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
           >
             {isSubmitting ? "Sending..." : "Submit Message"}
           </button>
