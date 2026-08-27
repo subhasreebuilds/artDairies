@@ -17,9 +17,9 @@ interface PurchaseModalProps {
 
 const getTurnstileSiteKey = () => {
   if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
-    return "1x00000000000000000000AA";
+    return process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAEdc79xG8VFN4eRW";
   }
-  return process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAAEdc79xG8VFN4eRW";
+  return process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || "0x4AAAAAAEdc79xG8VFN4eRW";
 };
 
 export default function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) {
