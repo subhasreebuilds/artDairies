@@ -52,7 +52,6 @@ export default function AdminLayout({
 
   const navItems = [
     { name: "Chats", href: "/admin/chats", icon: MessageSquare, badge: unreadChats },
-    { name: "Custom Gallery", href: "/admin/gallery", icon: ImageIcon },
   ];
 
   return (

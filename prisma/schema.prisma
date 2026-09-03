@@ -27,11 +27,3 @@ model Message {
   createdAt   DateTime  @default(now())
 }
 
-model CustomArtwork {
-  id          String    @id @default(uuid())
-  title       String
-  description String?
-  imageUrl    String
-  publicId    String    // Cloudinary public ID for deletion
-  createdAt   DateTime  @default(now())
-}
