@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
 import { InstagramIcon } from "@/components/icons/Instagram";
 import { useInstagram } from "@/context/InstagramContext";
 
 export default function Footer() {
   const { instaId } = useInstagram();
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <footer className="bg-ink-900 text-ivory py-16 px-6 md:px-12 mt-auto">

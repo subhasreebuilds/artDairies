@@ -25,6 +25,7 @@ const greatVibes = Great_Vibes({
 });
 
 import ChatWidget from "@/components/chat/ChatWidget";
+import MainLayoutWrapper from "@/components/MainLayoutWrapper";
 
 export const metadata: Metadata = {
   title: "Art Diaries | Independent Artist Portfolio",
@@ -44,9 +45,9 @@ export default function RootLayout({
       >
         <Providers>
           <Navbar />
-          <main className="flex-grow pt-24">
+          <MainLayoutWrapper>
             {children}
-          </main>
+          </MainLayoutWrapper>
           <Footer />
           <ChatWidget />
         </Providers>

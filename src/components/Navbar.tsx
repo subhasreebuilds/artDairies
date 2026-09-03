@@ -22,6 +22,11 @@ export default function Navbar() {
   const pathname = usePathname();
   const { instaId } = useInstagram();
 
+  // Hide Navbar on admin routes
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   // Close mobile nav when pathname changes
   useEffect(() => {
     setIsOpen(false);

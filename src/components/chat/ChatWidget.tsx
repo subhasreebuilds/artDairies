@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { pusherClient } from "@/lib/pusher";
+import { usePathname } from "next/navigation";
 
 type Message = {
   id: string;
@@ -25,7 +26,14 @@ export default function ChatWidget() {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const pathname = usePathname();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Hide the chat widget on admin routes
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   // Load session on mount
   useEffect(() => {
