@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessageSquare, Image as ImageIcon, LogOut } from "lucide-react";
+import { pusherClient } from "@/lib/pusher";
 
 export default function AdminLayout({
   children,
@@ -11,6 +12,38 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [unreadChats, setUnreadChats] = useState(0);
+
+  // Subscribe to global admin channel for new messages
+  useEffect(() => {
+    if (pathname === "/admin") return;
+
+    const channel = pusherClient.subscribe("chat-admin");
+
+    channel.bind("new-message", (newMessage: any) => {
+      // If we are not currently on the chats page, increment the unread badge
+      if (pathname !== "/admin/chats" && !newMessage.isFromAdmin) {
+        setUnreadChats((prev) => prev + 1);
+        
+        try {
+          const audio = new Audio("/notification.mp3");
+          audio.volume = 0.5;
+          audio.play().catch(() => {});
+        } catch (e) {}
+      }
+    });
+
+    return () => {
+      pusherClient.unsubscribe("chat-admin");
+    };
+  }, [pathname]);
+
+  // Clear unread chats when visiting the chats page
+  useEffect(() => {
+    if (pathname === "/admin/chats") {
+      setUnreadChats(0);
+    }
+  }, [pathname]);
 
   // Don't show the layout on the login page itself
   if (pathname === "/admin") {
@@ -18,7 +51,7 @@ export default function AdminLayout({
   }
 
   const navItems = [
-    { name: "Chats", href: "/admin/chats", icon: MessageSquare },
+    { name: "Chats", href: "/admin/chats", icon: MessageSquare, badge: unreadChats },
     { name: "Custom Gallery", href: "/admin/gallery", icon: ImageIcon },
   ];
 
@@ -49,7 +82,14 @@ export default function AdminLayout({
                     : "text-white/60 hover:bg-white/10 hover:text-white border border-transparent"
                 }`}
               >
-                <item.icon size={20} className={`transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
+                <div className="relative">
+                  <item.icon size={20} className={`transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
+                  {item.badge ? (
+                    <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full border border-black flex items-center justify-center text-[9px] font-bold text-white">
+                      {item.badge}
+                    </span>
+                  ) : null}
+                </div>
                 <span className="font-medium tracking-wide">{item.name}</span>
                 {isActive && (
                   <div className="ml-auto w-1.5 h-1.5 rounded-full bg-accent-gold animate-pulse" />

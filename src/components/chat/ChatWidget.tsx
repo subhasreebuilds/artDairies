@@ -5,6 +5,7 @@ import { MessageCircle, X, Send, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { pusherClient } from "@/lib/pusher";
 import { usePathname } from "next/navigation";
+import { validateEmailFormat } from "@/lib/emailValidation";
 
 type Message = {
   id: string;
@@ -20,11 +21,13 @@ export default function ChatWidget() {
   // User info
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [loginError, setLoginError] = useState("");
   
   // Chat state
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const pathname = usePathname();
 
@@ -34,6 +37,13 @@ export default function ChatWidget() {
   if (pathname?.startsWith("/admin")) {
     return null;
   }
+
+  // Clear unread count when opening the chat
+  useEffect(() => {
+    if (isOpen) {
+      setUnreadCount(0);
+    }
+  }, [isOpen]);
 
   // Load session on mount
   useEffect(() => {
@@ -73,12 +83,23 @@ export default function ChatWidget() {
         if (prev.find((m) => m.id === newMessage.id)) return prev;
         return [...prev, newMessage];
       });
+      
+      // If the chat is closed, increment the unread badge
+      if (!isOpen) {
+        setUnreadCount((prev) => prev + 1);
+        // Optional: Play a subtle notification sound
+        try {
+          const audio = new Audio("/notification.mp3"); // Ensure this file exists in public/ or it will fail silently
+          audio.volume = 0.5;
+          audio.play().catch(() => {}); // Catch error if browser blocks autoplay
+        } catch (e) {}
+      }
     });
 
     return () => {
       pusherClient.unsubscribe(channelName);
     };
-  }, [isJoined, email]);
+  }, [isJoined, email, isOpen]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -89,8 +110,20 @@ export default function ChatWidget() {
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+    setLoginError("");
+
+    if (!name.trim() || !email.trim()) {
+      setLoginError("Name and email are required.");
+      return;
+    }
     
+    // Validate email format and block temporary/fake emails
+    const validation = validateEmailFormat(email);
+    if (!validation.isValid) {
+      setLoginError(validation.error || "Please enter a valid email address.");
+      return;
+    }
+
     localStorage.setItem("chat_name", name);
     localStorage.setItem("chat_email", email);
     setIsJoined(true);
@@ -183,6 +216,9 @@ export default function ChatWidget() {
                       className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white dark:text-white"
                       required
                     />
+                    {loginError && (
+                      <p className="text-red-500 text-xs text-center">{loginError}</p>
+                    )}
                     <button 
                       type="submit"
                       className="w-full bg-black text-white dark:bg-white dark:text-black py-2 rounded-lg font-medium hover:opacity-90 transition-opacity"
@@ -244,14 +280,27 @@ export default function ChatWidget() {
       </AnimatePresence>
 
       {/* Floating Button */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow"
-      >
-        {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
-      </motion.button>
+      <div className="relative">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-shadow relative"
+        >
+          {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+        </motion.button>
+
+        {/* Unread Badge */}
+        {!isOpen && unreadCount > 0 && (
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-neutral-950 shadow-sm"
+          >
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
