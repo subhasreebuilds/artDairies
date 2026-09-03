@@ -56,9 +56,16 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-neutral-900 via-black to-neutral-900 text-white selection:bg-accent-gold/30">
-      {/* Premium Glassmorphic Admin Sidebar */}
-      <aside className="w-72 bg-white/5 backdrop-blur-2xl border-r border-white/10 flex flex-col pt-8 relative overflow-hidden shadow-2xl">
+    <div className="flex flex-col md:flex-row h-[100dvh] bg-gradient-to-br from-neutral-900 via-black to-neutral-900 text-white selection:bg-accent-gold/30 relative">
+      {/* Mobile Top Header */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-white/5 backdrop-blur-2xl border-b border-white/10 relative z-20">
+        <h1 className="text-xl font-serif italic font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-accent-gold to-yellow-200">
+          Command Center
+        </h1>
+      </div>
+
+      {/* Premium Glassmorphic Admin Sidebar (Desktop) */}
+      <aside className="hidden md:flex w-72 bg-white/5 backdrop-blur-2xl border-r border-white/10 flex-col pt-8 relative overflow-hidden shadow-2xl">
         {/* Subtle glow effect behind sidebar */}
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-accent-gold/20 to-transparent opacity-50 blur-xl pointer-events-none" />
         
@@ -108,7 +115,7 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-auto p-8 relative">
+      <main className="flex-1 overflow-auto p-4 md:p-8 pb-24 md:pb-8 relative z-10">
         {/* Background ambient glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-gold/5 rounded-full blur-[120px] pointer-events-none" />
         
@@ -116,6 +123,36 @@ export default function AdminLayout({
           {children}
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation (Mobile) */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-black/90 backdrop-blur-3xl border-t border-white/10 flex items-center justify-around p-4 z-50">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link 
+              key={item.name} 
+              href={item.href}
+              className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 ${
+                isActive ? "text-accent-gold" : "text-white/50 hover:text-white/80"
+              }`}
+            >
+              <div className="relative">
+                <item.icon size={22} className={isActive ? "scale-110" : ""} />
+                {item.badge ? (
+                  <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full border border-black flex items-center justify-center text-[9px] font-bold text-white">
+                    {item.badge}
+                  </span>
+                ) : null}
+              </div>
+              <span className="text-[10px] font-medium tracking-wide mt-1">{item.name}</span>
+            </Link>
+          );
+        })}
+        <button className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 text-white/50 hover:text-red-400">
+          <LogOut size={22} />
+          <span className="text-[10px] font-medium tracking-wide mt-1">Sign Out</span>
+        </button>
+      </nav>
     </div>
   );
 }
