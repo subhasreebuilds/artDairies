@@ -24,6 +24,8 @@ const greatVibes = Great_Vibes({
   weight: ["400"],
 });
 
+import ChatWidget from "@/components/chat/ChatWidget";
+
 export const metadata: Metadata = {
   title: "Art Diaries | Independent Artist Portfolio",
   description: "Traditional Indian artistic inspiration expressed through intricate contemporary handmade art.",
@@ -46,6 +48,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ChatWidget />
         </Providers>
       </body>
     </html>
