@@ -129,6 +129,19 @@ export function generateFallbackInstagramArtworks(instaId: string): InstagramArt
   const cleanId = instaId.replace(/^@/, "");
   
   const realInstagramPosts = [
+    // Position 0: Newest Instagram Art
+    {
+      id: "4000000000000000000",
+      shortcode: "Dc8o2OiTAKB",
+      title: "Newest Artwork",
+      category: "DECORATIVE" as ArtworkCategory,
+      image: "https://www.instagram.com/p/Dc8o2OiTAKB/media/?size=l",
+      caption: "Newest artwork added directly from Instagram!",
+      medium: "Original Instagram Artwork",
+      likes: 10,
+      comments: 2,
+      orientation: "square" as const
+    },
     // Position 1: Red Jagannath Painting (ODISHA & JAGANNATH)
     {
       id: "3933982870994107354",
